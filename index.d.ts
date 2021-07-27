@@ -1956,7 +1956,7 @@ declare namespace Eris {
     url: string;
     user: User | null;
     delete(reason?: string): Promise<void>;
-    edit(options: RoleOptions, reason?: string): Promise<Role>;
+    edit(options: { name?: string; roles?: string[] }, reason?: string ): Promise<Emoji>;
   }
 
   export class ExtendedUser extends User {
