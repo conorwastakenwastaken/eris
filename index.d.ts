@@ -376,15 +376,6 @@ declare namespace Eris {
   }
 
   // Emoji
-  interface Emoji extends EmojiBase {
-    animated: boolean;
-    available: boolean;
-    id: string;
-    managed: boolean;
-    require_colons: boolean;
-    roles: string[];
-    user?: PartialUser;
-  }
   interface EmojiBase {
     icon?: string;
     name: string;
@@ -1951,6 +1942,21 @@ declare namespace Eris {
     response: HTTPResponse;
     constructor(req: ClientRequest, res: IncomingMessage, response: HTTPResponse, stack: string);
     flattenErrors(errors: HTTPResponse, keyPrefix?: string): string[];
+  }
+
+  export class Emoji extends Base implements EmojiBase {
+    animated: boolean | null;
+    available: boolean | null;
+    format: string;
+    id: string;
+    managed: boolean | null;
+    name: string;
+    require_colons: boolean | null;
+    roles: string[] | null;
+    url: string;
+    user: User | null;
+    delete(reason?: string): Promise<void>;
+    edit(options: RoleOptions, reason?: string): Promise<Role>;
   }
 
   export class ExtendedUser extends User {
