@@ -1948,6 +1948,7 @@ declare namespace Eris {
     animated: boolean | null;
     available: boolean | null;
     format: string;
+    guild: Guild;
     id: string;
     managed: boolean | null;
     name: string;
