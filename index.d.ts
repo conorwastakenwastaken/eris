@@ -1947,6 +1947,7 @@ declare namespace Eris {
   export class Emoji extends Base implements EmojiBase {
     animated: boolean | null;
     available: boolean | null;
+    createdAt: number;
     format: string;
     guild: Guild;
     id: string;
