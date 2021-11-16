@@ -20,6 +20,7 @@ export const {
   Constants,
   DiscordHTTPError,
   DiscordRESTError,
+  Emoji,
   ExtendedUser,
   GroupChannel,
   Guild,

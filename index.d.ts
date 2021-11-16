@@ -554,15 +554,6 @@ declare namespace Eris {
   }
 
   // Emoji
-  interface Emoji extends EmojiBase {
-    animated: boolean;
-    available: boolean;
-    id: string;
-    managed: boolean;
-    require_colons: boolean;
-    roles: string[];
-    user?: PartialUser;
-  }
   interface EmojiBase {
     icon?: string;
     name: string;
@@ -2583,6 +2574,23 @@ declare namespace Eris {
     flattenErrors(errors: HTTPResponse, keyPrefix?: string): string[];
   }
 
+  export class Emoji extends Base implements EmojiBase {
+    animated: boolean | null;
+    available: boolean | null;
+    createdAt: number;
+    format: string;
+    guild: Guild;
+    id: string;
+    managed: boolean | null;
+    name: string;
+    require_colons: boolean | null;
+    roles: string[] | null;
+    url: string;
+    user: User | null;
+    delete(reason?: string): Promise<void>;
+    edit(options: { name?: string; roles?: string[] }, reason?: string ): Promise<Emoji>;
+  }
+
   export class ExtendedUser extends User {
     email: string;
     mfaEnabled: boolean;
@@ -2627,6 +2635,7 @@ declare namespace Eris {
     id: string;
     joinedAt: number;
     large: boolean;
+    maxEmojis: number;
     maxMembers: number;
     maxPresences?: number | null;
     maxVideoChannelUsers?: number;
@@ -3032,8 +3041,10 @@ declare namespace Eris {
     defaultAvatar: string;
     defaultAvatarURL: string;
     discriminator: string;
+    displayName: string;
     game: Activity | null;
     guild: Guild;
+    highestRole: string;
     id: string;
     joinedAt: number | null;
     mention: string;
@@ -3046,6 +3057,7 @@ declare namespace Eris {
     roles: string[];
     staticAvatarURL: string;
     status?: Status;
+    tag: string;
     user: User;
     username: string;
     voiceState: VoiceState;
@@ -3075,6 +3087,7 @@ declare namespace Eris {
     editedTimestamp?: number;
     embeds: Embed[];
     flags: number;
+    guild: Guild;
     guildID: T extends GuildTextableWithThread ? string : undefined;
     id: string;
     interaction: MessageInteraction | null;
@@ -3542,6 +3555,7 @@ declare namespace Eris {
     publicFlags?: number;
     staticAvatarURL: string;
     system: boolean;
+    tag: string;
     username: string;
     constructor(data: BaseData, client: Client);
     addRelationship(block?: boolean): Promise<void>;
