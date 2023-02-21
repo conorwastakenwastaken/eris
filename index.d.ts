@@ -1807,6 +1807,7 @@ declare namespace Eris {
       GUILD_STAGE_VOICE:    13;
       /** @deprecated */
       GUILD_STAGE:          13;
+      GUILD_FORUM:          15;
     };
     ComponentTypes: {
       ACTION_ROW:  1;
