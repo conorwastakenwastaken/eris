@@ -2398,7 +2398,7 @@ declare namespace Eris {
     addMessageReaction(channelID: string, messageID: string, reaction: string, userID: string): Promise<void>;
     addRelationship(userID: string, block?: boolean): Promise<void>;
     addSelfPremiumSubscription(token: string, plan: string): Promise<void>;
-    banGuildMember(guildID: string, userID: string, deleteMessageDays?: number, reason?: string): Promise<void>;
+    banGuildMember(guildID: string, userID: string, deleteMessageSeconds?: number, reason?: string): Promise<void>;
     bulkEditCommandPermissions(guildID: string, permissions: { id: string; permissions: ApplicationCommandPermissions[] }[]): Promise<GuildApplicationCommandPermissions[]>;
     bulkEditCommands(commands: ApplicationCommandStructure[]): Promise<ApplicationCommand[]>;
     bulkEditGuildCommands(guildID: string, commands: ApplicationCommandStructure[]): Promise<ApplicationCommand[]>;
