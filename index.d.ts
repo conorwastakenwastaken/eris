@@ -3339,6 +3339,7 @@ declare namespace Eris {
     discriminator: string;
     displayName: string;
     game: Activity | null;
+    globalName: string | null;
     guild: Guild;
     highestRole: string;
     id: string;
@@ -3910,6 +3911,7 @@ declare namespace Eris {
     defaultAvatar: string;
     defaultAvatarURL: string;
     discriminator: string;
+    globalName: string | null;
     id: string;
     mention: string;
     publicFlags?: number;
