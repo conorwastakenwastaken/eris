@@ -5,6 +5,7 @@ export default function(token, options) {
 }
 
 export const {
+  ApplicationCommand,
   AutocompleteInteraction,
   Base,
   Bucket,
@@ -22,6 +23,7 @@ export const {
   DiscordRESTError,
   Emoji,
   ExtendedUser,
+  ForumChannel,
   GroupChannel,
   Guild,
   GuildChannel,
@@ -50,7 +52,6 @@ export const {
   SharedStream,
   StageChannel,
   StageInstance,
-  StoreChannel,
   TextChannel,
   TextVoiceChannel,
   ThreadChannel,
