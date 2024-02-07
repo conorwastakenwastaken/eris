@@ -352,48 +352,6 @@ declare namespace Eris {
     presets: AutoModerationKeywordPresetType[];
   }
 
-  // Auto Moderation
-  interface AutoModerationAction {
-    metadata?: AutoModerationActionMetadata;
-    type: AutoModerationActionType;
-  }
-  interface AutoModerationActionMetadata {
-    /** valid for SEND_ALERT_MESSAGE */
-    channel_id?: string;
-    /** valid for TIMEOUT */
-    duration_seconds?: number;
-  }
-  interface AutoModerationRule {
-    actions: AutoModerationAction[];
-    creator_id: string;
-    enabled: boolean;
-    event_type: AutoModerationEventType;
-    exempt_roles: string[];
-    exempt_users: string[];
-    guild_id: string;
-    id: string;
-    name: string;
-    trigger_metadata: AutoModerationTriggerMetadata;
-    trigger_type: AutoModerationTriggerType;
-  }
-  interface CreateAutoModerationRuleOptions {
-    actions: AutoModerationAction[];
-    enabled?: boolean;
-    eventType: AutoModerationActionType;
-    exemptChannels?: string[];
-    exemptRoles?: string[];
-    name: string;
-    reason?: string;
-    triggerMetadata?: AutoModerationTriggerMetadata;
-    triggerType: AutoModerationTriggerType;
-  }
-
-  interface AutoModerationTriggerMetadata {
-    /** valid for KEYWORD */
-    keyword_filter: string[];
-    /** valid for KEYWORD_PRESET */
-    presets: AutoModerationKeywordPresetType[];
-  }
   // Channel
   interface ChannelFollow {
     channel_id: string;
@@ -702,6 +660,22 @@ declare namespace Eris {
   }
 
   // Emoji
+  export class Emoji extends Base implements EmojiBase {
+    animated: boolean | null;
+    available: boolean | null;
+    createdAt: number;
+    format: string;
+    guild: Guild;
+    id: string;
+    managed: boolean | null;
+    name: string;
+    require_colons: boolean | null;
+    roles: string[] | null;
+    url: string;
+    user: User | null;
+    delete(reason?: string): Promise<void>;
+    edit(options: { name?: string; roles?: string[] }, reason?: string ): Promise<Emoji>;
+  }
   interface EmojiBase {
     icon?: string;
     name: string;
@@ -903,7 +877,6 @@ declare namespace Eris {
     guildCreate: [guild: Guild];
     guildDelete: [guild: PossiblyUncachedGuild];
     guildEmojisUpdate: [guild: PossiblyUncachedGuild, emojis: Emoji[], oldEmojis: Emoji[] | null];
-    guildAuditLogEntryCreate: [guild: Guild, entry: GuildAuditLogEntry];
     guildMemberAdd: [guild: Guild, member: Member];
     guildMemberChunk: [guild: Guild, member: Member[]];
     guildMemberRemove: [guild: Guild, member: Member | MemberPartial];
@@ -1515,17 +1488,6 @@ declare namespace Eris {
     style: Constants["TextInputStyles"][keyof Constants["TextInputStyles"]];
     type: Constants["ComponentTypes"]["TEXT_INPUT"];
     value?: string;
-  }
-  interface TextInput {
-    type: Constants["ComponentTypes"]["TEXT_INPUT"];
-    custom_id: string;
-    style: Constants["TextInputStyles"][keyof Constants["TextInputStyles"]];
-    label: string;
-    min_length?: number;
-    max_length?: number;
-    required?: boolean;
-    value?: string;
-    placeholder?: string;
   }
   interface GetMessageReactionOptions {
     after?: string;
@@ -3107,49 +3069,6 @@ declare namespace Eris {
     toString(): string;
   }
 
-  export class CommandInteraction<T extends PossiblyUncachedTextable = TextableChannel> extends Interaction {
-    appPermissions?: Permission;
-    channel: T;
-    data: CommandInteractionData;
-    guildID?: string;
-    member?: Member;
-    type: Constants["InteractionTypes"]["APPLICATION_COMMAND"];
-    user?: User;
-    acknowledge(flags?: number): Promise<void>;
-    createFollowup(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<Message>;
-    createMessage(content: string | InteractionContent , file?: FileContent | FileContent[]): Promise<void>;
-    createModal(content: InteractionModalContent): Promise<void>;
-    defer(flags?: number): Promise<void>;
-    deleteMessage(messageID: string): Promise<void>;
-    deleteOriginalMessage(): Promise<void>;
-    editMessage(messageID: string, content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    editOriginalMessage(content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    getOriginalMessage(): Promise<Message>
-  }
-
-  export class ComponentInteraction<T extends PossiblyUncachedTextable = TextableChannel> extends Interaction {
-    appPermissions?: Permission;
-    channel: T;
-    data: ComponentInteractionButtonData | ComponentInteractionSelectMenuData;
-    guildID?: string;
-    member?: Member;
-    message: Message;
-    type: Constants["InteractionTypes"]["MESSAGE_COMPONENT"];
-    user?: User;
-    acknowledge(): Promise<void>;
-    createFollowup(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<Message>;
-    createMessage(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<void>;
-    createModal(content: InteractionModalContent): Promise<void>;
-    defer(flags?: number): Promise<void>;
-    deferUpdate(): Promise<void>;
-    deleteMessage(messageID: string): Promise<void>;
-    deleteOriginalMessage(): Promise<void>;
-    editMessage(messageID: string, content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    editOriginalMessage(content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    editParent(content: InteractionContentEdit, file?: FileContent | FileContent[]): Promise<void>;
-    getOriginalMessage(): Promise<Message>
-  }
-
   export class DiscordHTTPError extends Error {
     code: number;
     headers: IncomingHttpHeaders;
@@ -3170,23 +3089,6 @@ declare namespace Eris {
     response: HTTPResponse;
     constructor(req: ClientRequest, res: IncomingMessage, response: HTTPResponse, stack: string);
     flattenErrors(errors: HTTPResponse, keyPrefix?: string): string[];
-  }
-
-  export class Emoji extends Base implements EmojiBase {
-    animated: boolean | null;
-    available: boolean | null;
-    createdAt: number;
-    format: string;
-    guild: Guild;
-    id: string;
-    managed: boolean | null;
-    name: string;
-    require_colons: boolean | null;
-    roles: string[] | null;
-    url: string;
-    user: User | null;
-    delete(reason?: string): Promise<void>;
-    edit(options: { name?: string; roles?: string[] }, reason?: string ): Promise<Emoji>;
   }
 
   export class ExtendedUser extends User {
@@ -3822,12 +3724,6 @@ declare namespace Eris {
     type: PermissionType;
     constructor(data: Overwrite);
   }
-  
-  export class PingInteraction extends Interaction {
-    type: Constants["InteractionTypes"]["PING"];
-    acknowledge(): Promise<void>;
-    pong(): Promise<void>;
-  }
 
   export class Piper extends EventEmitter {
     converterCommand: ConverterCommand;
@@ -4218,30 +4114,6 @@ declare namespace Eris {
     shard: Shard;
     unavailable: boolean;
     constructor(data: BaseData, client: Client);
-  }
-
-  export class UnknownInteraction<T extends PossiblyUncachedTextable = TextableChannel> extends Interaction {
-    appPermissions?: Permission;
-    channel?: T;
-    data?: unknown;
-    guildID?: string;
-    member?: Member;
-    message?: Message;
-    type: number;
-    user?: User;
-    acknowledge(data: InteractionOptions): Promise<void>;
-    createFollowup(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<Message>;
-    createMessage(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<void>;
-    defer(flags?: number): Promise<void>;
-    deferUpdate(): Promise<void>;
-    deleteMessage(messageID: string): Promise<void>;
-    deleteOriginalMessage(): Promise<void>;
-    editMessage(messageID: string, content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    editOriginalMessage(content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message>;
-    editParent(content: InteractionContentEdit, file?: FileContent | FileContent[]): Promise<void>;
-    getOriginalMessage(): Promise<Message>
-    pong(): Promise<void>;
-    result(choices: ApplicationCommandOptionChoice[]): Promise<void>;
   }
 
   export class User extends Base {
