@@ -1,6 +1,6 @@
 import Eris from "./index.js";
 
-export default function(token, options) {
+export default function (token, options) {
   return new Eris.Client(token, options);
 }
 
@@ -9,7 +9,6 @@ export const {
   AutocompleteInteraction,
   Base,
   Bucket,
-  Call,
   CategoryChannel,
   Channel,
   Client,
@@ -46,7 +45,6 @@ export const {
   PrivateChannel,
   PrivateThreadChannel,
   PublicThreadChannel,
-  Relationship,
   RequestHandler,
   Role,
   SequentialBucket,
@@ -64,5 +62,5 @@ export const {
   VoiceChannel,
   VoiceConnection,
   VoiceConnectionManager,
-  VoiceState
+  VoiceState,
 } = Eris;
