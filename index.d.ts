@@ -697,7 +697,7 @@ declare namespace Eris {
     url: string;
     user: User | null;
     delete(reason?: string): Promise<void>;
-    edit(options: { name?: string; roles?: string[] }, reason?: string ): Promise<Emoji>;
+    edit(options: { name?: string; roles?: string[] }, reason?: string): Promise<Emoji>;
   }
   interface EmojiBase {
     icon?: string;
@@ -750,6 +750,7 @@ declare namespace Eris {
     icon: string | null;
     keywords: string[] | null;
     large: boolean;
+    maxEmojis: number;
     maxMembers?: number;
     maxVideoChannelUsers?: number;
     mfaLevel: MFALevel;
