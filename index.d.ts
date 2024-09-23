@@ -14,6 +14,7 @@ declare namespace Eris {
   export const Constants: Constants;
   export const VERSION: string;
 
+  /** @deprecated */
   export const PrivateChannel: typeof DMChannel;
 
   // TYPES
@@ -159,6 +160,7 @@ declare namespace Eris {
   type MessageActivityTypes = Constants["MessageActivityTypes"][keyof Constants["MessageActivityTypes"]];
   type MessageContent = string | AdvancedMessageContent;
   type MessageContentEdit = string | AdvancedMessageContentEdit;
+  type MessageReferenceTypes = Constants["MessageReferenceTypes"][keyof Constants["MessageReferenceTypes"]];
   type PollLayoutTypes = Constants["PollLayoutTypes"][keyof Constants["PollLayoutTypes"]];
   type PossiblyUncachedMessage = Message | { channel: TextableChannel | { id: string; guild?: Uncached }; guildID?: string; id: string };
   type ReactionTypes = Constants["ReactionTypes"][keyof Constants["ReactionTypes"]];
@@ -882,7 +884,7 @@ declare namespace Eris {
     channelDelete: [channel: Exclude<AnyChannel, GroupChannel>];
     channelPinUpdate: [channel: TextableChannel, timestamp: number, oldTimestamp: number];
     channelUpdate: [channel: AnyGuildChannel, oldChannel: OldGuildChannel | OldForumChannel | OldGuildTextChannel | OldVoiceChannel]
-    | [channel: GroupChannel, oldChannel: OldGroupChannel];
+      | [channel: GroupChannel, oldChannel: OldGroupChannel];
     connect: [id: number];
     debug: [message: string, id?: number];
     disconnect: [];
@@ -939,7 +941,7 @@ declare namespace Eris {
     threadMemberUpdate: [channel: AnyThreadChannel, member: ThreadMember, oldMember: OldThreadMember];
     threadUpdate: [channel: AnyThreadChannel, oldChannel: OldThread | null];
     typingStart: [channel: AnyGuildTextableChannel | Uncached, user: User | Uncached, member: Member]
-    | [channel: DMChannel | Uncached, user: User | Uncached, member: null];
+      | [channel: DMChannel | Uncached, user: User | Uncached, member: null];
     unavailableGuildCreate: [guild: UnavailableGuild];
     unknown: [packet: RawPacket, id?: number];
     userUpdate: [user: User, oldUser: PartialUser | null];
@@ -1031,6 +1033,13 @@ declare namespace Eris {
     deleteMessageDays?: number;
     deleteMessageSeconds?: number;
     reason?: string;
+  }
+  interface BulkBanMembersOptions extends Omit<BanMemberOptions, "deleteMessageDays"> {
+    userIDs: string[];
+  }
+  interface BulkBanMembersResponse {
+    banned_users: string[];
+    failed_users: string[];
   }
   interface CreateGuildOptions {
     afkChannelID?: string;
@@ -1440,7 +1449,7 @@ declare namespace Eris {
     timeout: NodeJS.Timer;
   }
   interface AdvancedMessageContent extends AdvancedMessageContentEdit {
-    messageReference?: MessageReferenceReply;
+    messageReference?: MessageReferenceReply | MessageReferenceForward;
     /** @deprecated */
     messageReferenceID?: string;
     poll?: PollCreateOptions;
@@ -1551,10 +1560,21 @@ declare namespace Eris {
     channelID?: string;
     guildID?: string;
     messageID?: string;
+    type?: MessageReferenceTypes;
+  }
+  interface MessageReferenceForward extends MessageReferenceBase {
+    channelID: string;
+    messageID: string;
+    type: Constants["MessageReferenceTypes"]["FORWARD"];
   }
   interface MessageReferenceReply extends MessageReferenceBase {
     messageID: string;
     failIfNotExists?: boolean;
+    type?: Constants["MessageReferenceTypes"]["DEFAULT"];
+  }
+  interface MessageSnapshot {
+    guildID?: string;
+    message: Pick<Message, "attachments" | "content" | "editedTimestamp" | "embeds" | "flags" | "id" | "mentions" | "roleMentions" | "timestamp" | "type">;
   }
   interface PartialAttachment {
     description?: string;
@@ -2033,7 +2053,9 @@ declare namespace Eris {
     lastReconnectDelay: number;
     options: ClientOptions;
     presence: ClientPresence;
+    /** @deprecated */
     privateChannelMap: Record<string, string>;
+    /** @deprecated */
     privateChannels: Collection<DMChannel>;
     ready: boolean;
     reconnectAttempts: number;
@@ -2055,6 +2077,7 @@ declare namespace Eris {
     banGuildMember(guildID: string, userID: string, options?: BanMemberOptions): Promise<void>;
     /** @deprecated */
     banGuildMember(guildID: string, userID: string, deleteMessageDays?: number, reason?: string): Promise<void>;
+    bulkBanGuildMembers(guildID: string, options: BulkBanMembersOptions): Promise<BulkBanMembersResponse>;
     bulkEditCommands(commands: ApplicationCommandBulkEditOptions<false>[]): Promise<ApplicationCommand<false>[]>;
     bulkEditGuildCommands(guildID: string, commands: ApplicationCommandBulkEditOptions<true>[]): Promise<ApplicationCommand<true>[]>;
     closeVoiceConnection(guildID: string): void;
@@ -2531,6 +2554,7 @@ declare namespace Eris {
     banMember(userID: string, options?: BanMemberOptions): Promise<void>;
     /** @deprecated */
     banMember(userID: string, deleteMessageDays?: number, reason?: string): Promise<void>;
+    bulkBanMembers(options: BulkBanMembersOptions): Promise<BulkBanMembersResponse>;
     bulkEditCommands<T extends ApplicationCommandTypes>(commands: ApplicationCommandBulkEditOptions<true, T>[]): Promise<ApplicationCommand<true, T>[]>;
     createAutoModerationRule(rule: CreateAutoModerationRuleOptions): Promise<AutoModerationRule>;
     createChannel(name: string): Promise<TextChannel>;
@@ -2997,6 +3021,7 @@ declare namespace Eris {
     mentionEveryone: boolean;
     mentions: User[];
     messageReference: MessageReference | null;
+    messageSnapshots?: MessageSnapshot[];
     pinned: boolean;
     poll?: Poll;
     prefix?: string;
