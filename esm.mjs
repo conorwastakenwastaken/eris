@@ -5,6 +5,7 @@ export default function (token, options) {
 }
 
 export const {
+  AutoModerationRule,
   ApplicationCommand,
   AutocompleteInteraction,
   Base,
@@ -50,6 +51,7 @@ export const {
   SequentialBucket,
   Shard,
   SharedStream,
+  SoundboardSound,
   StageChannel,
   StageInstance,
   TextChannel,
