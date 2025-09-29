@@ -2668,6 +2668,7 @@ declare namespace Eris {
     maxPresences?: number | null;
     maxStageVideoChannelUsers?: number;
     maxVideoChannelUsers?: number;
+    me?: Member;
     memberCount: number;
     members: Collection<Member>;
     mfaLevel: MFALevel;
