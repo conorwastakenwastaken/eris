@@ -871,6 +871,7 @@ declare namespace Eris {
     roles: string[];
   }
   interface OldMessage {
+    activity?: MessageActivity;
     attachments: Attachment[];
     channelMentions: string[];
     content: string;
