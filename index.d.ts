@@ -1834,13 +1834,25 @@ declare namespace Eris {
   }
   interface PartialRole {
     color?: number;
+    colors?: RoleColors;
     flags?: number;
     hoist?: boolean;
+    icon?: string | null;
     id: string;
     mentionable?: boolean;
     name?: string;
     permissions?: number;
     position?: number;
+    unicodeEmoji?: string | null;
+  }
+  interface InviteRole {
+    color: number;
+    colors: RoleColors;
+    icon: string | null;
+    id: string;
+    name: string;
+    position: number;
+    unicodeEmoji: string | null;
   }
   interface RoleColors {
     primaryColor: number;
@@ -3104,6 +3116,7 @@ declare namespace Eris {
     maxUses: CT extends "withMetadata" ? number : null;
     memberCount: CT extends "withMetadata" | "withoutCount" ? null : number;
     presenceCount: CT extends "withMetadata" | "withoutCount" ? null : number;
+    roles: InviteRole[];
     /** @deprecated */
     stageInstance: CH extends StageChannel ? InviteStageInstance : null;
     temporary: CT extends "withMetadata" ? boolean : null;
