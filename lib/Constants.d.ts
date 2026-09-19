@@ -610,10 +610,11 @@ export default interface Constants {
     sendPolls:                        562949953421312n;
     useExternalApps:                  1125899906842624n;
     pinMessages:                      2251799813685248n;
+    bypassSlowmode:                   4503599627370496n;
     allGuild:                         1155597391626430n;
-    allText:                          4011553947384913n;
+    allText:                          8515153574755409n;
     allVoice:                         2080830385030929n;
-    all:                              4362862139015167n;
+    all:                              8866461766385663n;
   };
   PollLayoutTypes: {
     DEFAULT: 1;
