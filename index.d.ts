@@ -1490,6 +1490,12 @@ declare namespace Eris {
     asset: string;
     sku_id: string;
   }
+  interface UserPrimaryGuild {
+    badge: string | null;
+    identity_enabled: boolean | null;
+    identity_guild_id: string | null;
+    tag: string | null;
+  }
   interface MemberOptions {
     channelID?: string | null;
     communicationDisabledUntil?: Date | null;
@@ -1513,6 +1519,7 @@ declare namespace Eris {
     banner?: string | null;
     discriminator: string;
     id: string;
+    primaryGuild?: UserPrimaryGuild | null;
     username: string;
   }
   interface RequestGuildMembersOptions {
@@ -3588,6 +3595,7 @@ declare namespace Eris {
     globalName: string | null;
     id: string;
     mention: string;
+    primaryGuild?: UserPrimaryGuild | null;
     publicFlags?: number;
     staticAvatarURL: string;
     system: boolean;
