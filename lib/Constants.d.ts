@@ -149,6 +149,7 @@ export default interface Constants {
     SUCCESS:   3;
     DANGER:    4;
     LINK:      5;
+    PREMIUM:   6;
   };
   ChannelFlags: {
     PINNED:                      1;
@@ -182,6 +183,13 @@ export default interface Constants {
     ROLE_SELECT:        6;
     MENTIONABLE_SELECT: 7;
     CHANNEL_SELECT:     8;
+    SECTION:            9;
+    TEXT_DISPLAY:       10;
+    THUMBNAIL:          11;
+    MEDIA_GALLERY:      12;
+    FILE:               13;
+    SEPARATOR:          14;
+    CONTAINER:          17;
   };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
@@ -456,6 +464,8 @@ export default interface Constants {
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD: 256;
     SUPPRESS_NOTIFICATIONS:                 4096;
     IS_VOICE_MESSAGE:                       8192;
+    HAS_SNAPSHOT:                           16384;
+    IS_COMPONENTS_V2:                       32768;
   };
   MessageReferenceTypes: {
     DEFAULT: 0;
