@@ -1164,6 +1164,7 @@ declare namespace Eris {
     after?: string;
     before?: string;
     limit?: number;
+    shard?: number;
     withCounts?: boolean;
   }
   interface GuildAuditLog {
