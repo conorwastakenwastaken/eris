@@ -1758,6 +1758,7 @@ declare namespace Eris {
     /** @deprecated */
     messageReferenceID?: string;
     poll?: PollCreateOptions;
+    sharedClientTheme?: SharedClientTheme;
     stickerIDs?: string[];
     tts?: boolean;
   }
@@ -1865,6 +1866,12 @@ declare namespace Eris {
     slop?: number;
     sortBy?: "timestamp" | "relevance";
     sortOrder?: "asc" | "desc";
+  }
+  interface SharedClientTheme {
+    base_mix: number;
+    base_theme?: 0 | 1 | 2 | 3 | 4 | null;
+    colors: string[];
+    gradient_angle: number;
   }
   interface TextInput {
     custom_id: string;
@@ -3711,6 +3718,7 @@ declare namespace Eris {
     resolved?: MessageResolvedData;
     roleMentions: string[];
     roleSubscriptionData?: RoleSubscriptionData;
+    sharedClientTheme?: SharedClientTheme;
     stickerItems?: StickerItems[];
     /** @deprecated */
     stickers?: Sticker[];
