@@ -40,7 +40,7 @@ declare namespace Eris {
   type ApplicationCommandOptionsWithValue = ApplicationCommandOptionsString | ApplicationCommandOptionsInteger | ApplicationCommandOptionsBoolean | ApplicationCommandOptionsUser | ApplicationCommandOptionsChannel | ApplicationCommandOptionsRole | ApplicationCommandOptionsMentionable | ApplicationCommandOptionsNumber;
   type ApplicationCommandPermissionTypes = Constants["ApplicationCommandPermissionTypes"][keyof Constants["ApplicationCommandPermissionTypes"]];
   type ApplicationCommandTypes = Constants["ApplicationCommandTypes"][keyof Constants["ApplicationCommandTypes"]];
-  type ModalSubmitInteractionDataComponent = ModalSubmitInteractionDataTextInputComponent;
+  type ModalSubmitInteractionDataComponent = ModalSubmitInteractionDataTextInputComponent | ModalSubmitInteractionDataSelectComponent | ModalSubmitInteractionDataRadioComponent | ModalSubmitInteractionDataCheckboxComponent;
 
   // Auto Moderation
   type AutoModerationActionType = Constants["AutoModerationActionTypes"][keyof Constants["AutoModerationActionTypes"]];
@@ -150,7 +150,8 @@ declare namespace Eris {
   type InteractionResponseTypes = Constants["InteractionResponseTypes"][keyof Constants["InteractionResponseTypes"]];
   type InteractionTypes = Constants["InteractionTypes"][keyof Constants["InteractionTypes"]];
   type LocaleStrings = Constants["Locales"][keyof Constants["Locales"]];
-
+  type ModalSelectMenu<T = SelectMenu> = T extends SelectMenu ? Omit<T, "disabled"> & { disabled?: never } : never;
+  type ModalTextInput = Omit<TextInput, "label"> & { label?: never };
   // Invite
   type InviteTargetTypes = Constants["InviteTargetTypes"][keyof Constants["InviteTargetTypes"]];
 
@@ -1440,7 +1441,7 @@ declare namespace Eris {
     value: V;
   }
   interface InteractionModal {
-    components: ModalContentActionRow[];
+    components: (ModalContentActionRow | Label | TextDisplay)[];
     custom_id: string;
     title: string;
   }
@@ -1606,8 +1607,14 @@ declare namespace Eris {
     file: Buffer | string;
     name: string;
   }
+  interface TextDisplay {
+    content: string;
+    id?: number;
+    type: Constants["ComponentTypes"]["TEXT_DISPLAY"];
+  }
   interface TextInput {
     custom_id: string;
+    id?: number;
     label: string;
     max_length?: number;
     min_length?: number;
@@ -1729,9 +1736,11 @@ declare namespace Eris {
   interface SelectMenuBase {
     custom_id: string;
     disabled?: boolean;
+    id?: number;
     max_values?: number;
     min_values?: number;
     placeholder?: string;
+    required?: boolean;
     type: SelectMenuTypes;
   }
   interface ChannelSelectMenu extends SelectMenuBase {
@@ -1943,11 +1952,65 @@ declare namespace Eris {
   }
 
   // Modals
+  interface Checkbox {
+    custom_id: string;
+    default?: boolean;
+    id?: number;
+    type: Constants["ComponentTypes"]["CHECKBOX"];
+  }
+  interface CheckboxGroup {
+    custom_id: string;
+    id?: number;
+    max_values?: number;
+    min_values?: number;
+    options: RadioGroupOption[];
+    required?: boolean;
+    type: Constants["ComponentTypes"]["CHECKBOX_GROUP"];
+  }
+  interface FileUpload {
+    custom_id: string;
+    file_types?: string[];
+    id?: number;
+    max_values?: number;
+    min_values?: number;
+    required?: boolean;
+    type: Constants["ComponentTypes"]["FILE_UPLOAD"];
+  }
+  interface Label {
+    component: ModalTextInput | ModalSelectMenu | FileUpload | RadioGroup | CheckboxGroup | Checkbox;
+    description?: string;
+    id?: number;
+    label: string;
+    type: Constants["ComponentTypes"]["LABEL"];
+  }
+  interface ModalSubmitInteractionDataCheckboxComponent {
+    custom_id: string;
+    id?: number;
+    type: Constants["ComponentTypes"]["CHECKBOX"];
+    value: boolean;
+  }
   interface ModalSubmitInteractionDataComponents {
     components: ModalSubmitInteractionDataComponent[];
     type: Constants["ComponentTypes"]["ACTION_ROW"];
   }
 
+  interface ModalSubmitInteractionDataLabel {
+    component: ModalSubmitInteractionDataComponent;
+    id?: number;
+    type: Constants["ComponentTypes"]["LABEL"];
+  }
+  interface ModalSubmitInteractionDataRadioComponent {
+    custom_id: string;
+    id?: number;
+    type: Constants["ComponentTypes"]["RADIO_GROUP"];
+    value: string | null;
+  }
+  interface ModalSubmitInteractionDataSelectComponent {
+    custom_id: string;
+    id?: number;
+    type: SelectMenuTypes | Constants["ComponentTypes"]["FILE_UPLOAD"] | Constants["ComponentTypes"]["CHECKBOX_GROUP"];
+    values: string[];
+  }
   interface ModalSubmitInteractionDataTextInputComponent {
     custom_id: string;
     type: Constants["ComponentTypes"]["TEXT_INPUT"];
@@ -1955,10 +2018,30 @@ declare namespace Eris {
   }
 
   interface ModalSubmitInteractionData {
-    components: ModalSubmitInteractionDataComponents[];
+    components: (ModalSubmitInteractionDataComponents | ModalSubmitInteractionDataLabel | TextDisplay)[];
     custom_id: string;
+    resolved?: ModalSubmitInteractionResolvedData;
   }
-
+  interface ModalSubmitInteractionResolvedData {
+    attachments?: Record<string, Attachment>;
+    channels?: Record<string, Partial<Channel> & { app_permissions?: string }>;
+    members?: Record<string, Partial<Member>>;
+    roles?: Record<string, Partial<Role>>;
+    users?: Record<string, PartialUser>;
+  }
+  interface RadioGroup {
+    custom_id: string;
+    id?: number;
+    options: RadioGroupOption[];
+    required?: boolean;
+    type: Constants["ComponentTypes"]["RADIO_GROUP"];
+  }
+  interface RadioGroupOption {
+    default?: boolean;
+    description?: string;
+    label: string;
+    value: string;
+  }
   // Voice
   interface JoinVoiceChannelOptions {
     opusOnly?: boolean;
@@ -3246,6 +3329,7 @@ declare namespace Eris {
     data: ModalSubmitInteractionData;
     guildID: T extends AnyGuildChannel ? string : undefined;
     member: T extends AnyGuildChannel ? Member : undefined;
+    message?: Message<T>;
     type: Constants["InteractionTypes"]["MODAL_SUBMIT"];
     user: T extends AnyGuildChannel ? undefined : User;
     acknowledge(): Promise<void>;

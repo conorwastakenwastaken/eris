@@ -182,6 +182,12 @@ export default interface Constants {
     ROLE_SELECT:        6;
     MENTIONABLE_SELECT: 7;
     CHANNEL_SELECT:     8;
+    TEXT_DISPLAY:       10;
+    LABEL:              18;
+    FILE_UPLOAD:        19;
+    RADIO_GROUP:        21;
+    CHECKBOX_GROUP:     22;
+    CHECKBOX:           23;
   };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
