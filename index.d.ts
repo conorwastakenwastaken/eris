@@ -1014,6 +1014,7 @@ declare namespace Eris {
     webhooksUpdate: [data: WebhookData];
   }
   interface ClientEvents extends EventListeners {
+    rateLimited: [data: GatewayRateLimit];
     shardDisconnect: [err: Error | undefined, id: number];
     shardReady: [id: number];
     shardResume: [id: number];
@@ -1044,6 +1045,11 @@ declare namespace Eris {
   }
 
   // Gateway/REST
+  interface GatewayRateLimit {
+    meta: { guild_id: string; nonce?: string };
+    opcode: number;
+    retryAfter: number;
+  }
   interface HTTPResponse {
     code: number;
     message: string;
@@ -1075,6 +1081,7 @@ declare namespace Eris {
   interface RequestMembersPromise {
     members: Member[];
     received: number;
+    reject: (error: Error) => void;
     res: (value: Member[]) => void;
     timeout: NodeJS.Timeout;
   }
