@@ -1014,6 +1014,9 @@ declare namespace Eris {
     webhooksUpdate: [data: WebhookData];
   }
   interface ClientEvents extends EventListeners {
+    integrationCreate: [data: GuildIntegration];
+    integrationDelete: [data: DeletedGuildIntegration];
+    integrationUpdate: [data: GuildIntegration];
     shardDisconnect: [err: Error | undefined, id: number];
     shardReady: [id: number];
     shardResume: [id: number];
@@ -1106,6 +1109,11 @@ declare namespace Eris {
   interface BulkBanMembersResponse {
     banned_users: string[];
     failed_users: string[];
+  }
+  interface DeletedGuildIntegration {
+    applicationID?: string;
+    guildID: string;
+    id: string;
   }
   interface DiscoveryCategory {
     id: number;
@@ -2796,7 +2804,7 @@ declare namespace Eris {
     getDiscovery(): Promise<DiscoveryMetadata>;
     /** @deprecated */
     getEmbed(): Promise<Widget>;
-    getIntegrations(): Promise<GuildIntegration>;
+    getIntegrations(): Promise<GuildIntegration[]>;
     getInvites(): Promise<Invite[]>;
     getOnboarding(): Promise<GuildOnboarding>;
     getPruneCount(options?: GetPruneOptions): Promise<number>;
@@ -2883,12 +2891,13 @@ declare namespace Eris {
     name: string;
     revoked?: boolean;
     roleID?: string;
+    scopes?: string[];
     subscriberCount?: number;
     syncedAt?: number;
     syncing?: boolean;
     type: GuildIntegrationTypes;
     user?: User;
-    constructor(data: BaseData, guild: Guild);
+    constructor(data: BaseData, guild: Guild | Uncached, client?: Client);
     delete(): Promise<void>;
   }
 
