@@ -1601,6 +1601,20 @@ declare namespace Eris {
     media: UnfurledMediaItem;
     spoiler?: boolean;
   }
+  interface GuildMessageSearchIndexing {
+    code: 110000;
+    documentsIndexed?: number;
+    message: string;
+    retryAfter: number;
+  }
+  interface GuildMessageSearchResult {
+    documentsIndexed?: number;
+    doingDeepHistoricalIndex: boolean;
+    members?: ThreadMember[];
+    messages: Message[][];
+    threads?: AnyThreadChannel[];
+    totalResults: number;
+  }
   interface ModalContentActionRow {
     components: TextInput[];
     type: Constants["ComponentTypes"]["ACTION_ROW"];
@@ -1696,6 +1710,32 @@ declare namespace Eris {
     content: string;
     id?: number;
     type: Constants["ComponentTypes"]["TEXT_DISPLAY"];
+  }
+  interface SearchGuildMessagesOptions {
+    attachmentExtension?: string[];
+    attachmentFilename?: string[];
+    authorID?: string[];
+    authorType?: string[];
+    channelID?: string[];
+    content?: string;
+    embedProvider?: string[];
+    embedType?: string[];
+    has?: string[];
+    includeNSFW?: boolean;
+    limit?: number;
+    linkHostname?: string[];
+    maxID?: string;
+    mentionEveryone?: boolean;
+    mentions?: string[];
+    mentionsRoleID?: string[];
+    minID?: string;
+    offset?: number;
+    pinned?: boolean;
+    repliedToMessageID?: string[];
+    repliedToUserID?: string[];
+    slop?: number;
+    sortBy?: "timestamp" | "relevance";
+    sortOrder?: "asc" | "desc";
   }
   interface TextInput {
     custom_id: string;
@@ -2694,6 +2734,7 @@ declare namespace Eris {
     removeMessageReactionEmoji(channelID: string, messageID: string, reaction: string): Promise<void>;
     removeMessageReactions(channelID: string, messageID: string): Promise<void>;
     searchGuildMembers(guildID: string, query: string, limit?: number): Promise<Member[]>;
+    searchGuildMessages(guildID: string, options?: SearchGuildMessagesOptions): Promise<GuildMessageSearchResult | GuildMessageSearchIndexing>;
     sendChannelTyping(channelID: string): Promise<void>;
     sendSoundboardSound(channelID: string, options: GuildSoundboardSoundSend): Promise<void>;
     setVoiceChannelStatus(channelID: string, status: string | null, reason?: string): Promise<void>;
@@ -3055,6 +3096,7 @@ declare namespace Eris {
     pruneMembers(options?: PruneMemberOptions): Promise<number>;
     removeMemberRole(memberID: string, roleID: string, reason?: string): Promise<void>;
     searchMembers(query: string, limit?: number): Promise<Member[]>;
+    searchMessages(options?: SearchGuildMessagesOptions): Promise<GuildMessageSearchResult | GuildMessageSearchIndexing>;
     syncTemplate(code: string): Promise<GuildTemplate>;
     unbanMember(userID: string, reason?: string): Promise<void>;
   }
