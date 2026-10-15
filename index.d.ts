@@ -127,7 +127,7 @@ declare namespace Eris {
   type PermissionValueTypes = bigint | number | string;
   type PossiblyUncachedGuild = Guild | Uncached;
   type PossiblyUncachedGuildScheduledEvent = GuildScheduledEvent | Uncached;
-  type PossiblyUncachedGuildSoundboardSound = SoundboardSound | { id: string; guild: PossiblyUncachedGuild };
+  type PossiblyUncachedGuildSoundboardSound = SoundboardSound | { guild: PossiblyUncachedGuild; id: string };
   type PremiumTier = Constants["PremiumTiers"][keyof Constants["PremiumTiers"]];
   type SystemChannelFlags = Constants["SystemChannelFlags"][keyof Constants["SystemChannelFlags"]];
   type VerificationLevel = Constants["VerificationLevels"][keyof Constants["VerificationLevels"]];
@@ -165,7 +165,7 @@ declare namespace Eris {
   type MessageContentEdit = string | AdvancedMessageContentEdit;
   type MessageReferenceTypes = Constants["MessageReferenceTypes"][keyof Constants["MessageReferenceTypes"]];
   type PollLayoutTypes = Constants["PollLayoutTypes"][keyof Constants["PollLayoutTypes"]];
-  type PossiblyUncachedMessage = Message | { channel: TextableChannel | { id: string; guild?: Uncached }; guildID?: string; id: string };
+  type PossiblyUncachedMessage = Message | { channel: TextableChannel | { guild?: Uncached; id: string }; guildID?: string; id: string };
   type ReactionTypes = Constants["ReactionTypes"][keyof Constants["ReactionTypes"]];
   type SelectMenu = StringSelectMenu | ChannelSelectMenu | ResolvedSelectMenus;
   type SelectMenuNonResolvedTypes = Constants["ComponentTypes"][keyof Pick<Constants["ComponentTypes"], "STRING_SELECT">];
@@ -308,8 +308,8 @@ declare namespace Eris {
     autocomplete?: false;
   }
   interface AutocompleteDisabledInteger extends AutocompleteDisabled {
-    min_value?: null;
     max_value?: null;
+    min_value?: null;
   }
   interface AutocompleteDisabledIntegerMinMax extends AutocompleteDisabled {
     choices?: null;
@@ -398,8 +398,8 @@ declare namespace Eris {
   }
   interface EditChannelOptionsBase {
     name?: string;
-    position?: number;
     permissionOverwrites?: Overwrite[];
+    position?: number;
   }
   interface EditNewsChannelOptions extends EditChannelOptionsBase {
     defaultAutoArchiveDuration?: AutoArchiveDuration | null;
@@ -499,8 +499,8 @@ declare namespace Eris {
     items: GetPinsResponseItem;
   }
   interface GetPinsResponseItem {
-    pinnedAt: number;
     message: Message;
+    pinnedAt: number;
   }
   interface PurgeChannelOptions {
     after?: string;
@@ -745,9 +745,9 @@ declare namespace Eris {
     items: Emoji[];
   }
   interface PartialEmoji {
+    animated?: boolean;
     id: string | null;
     name: string;
-    animated?: boolean;
   }
 
   // Events
@@ -965,8 +965,8 @@ declare namespace Eris {
     guildScheduledEventUserRemove: [event: PossiblyUncachedGuildScheduledEvent, user: PossiblyUncachedUser];
     guildSoundboardSoundCreate: [sound: SoundboardSound];
     guildSoundboardSoundDelete: [sound: PossiblyUncachedGuildSoundboardSound];
-    guildSoundboardSoundUpdate: [sound: SoundboardSound, oldSound: OldGuildSoundboardSound | null];
     guildSoundboardSoundsUpdate: [guild: PossiblyUncachedGuild, sounds: SoundboardSound[], oldSounds: (OldGuildSoundboardSound | null)[]];
+    guildSoundboardSoundUpdate: [sound: SoundboardSound, oldSound: OldGuildSoundboardSound | null];
     guildStickersUpdate: [guild: PossiblyUncachedGuild, stickers: Sticker[], oldStickers: Sticker[] | null];
     guildUnavailable: [guild: UnavailableGuild];
     guildUpdate: [guild: Guild, oldGuild: OldGuild];
@@ -1038,8 +1038,8 @@ declare namespace Eris {
     speakingStop: [userID: string];
     start: [];
     unknown: [packet: RawPacket];
-    usersConnect: [userIDs: string[]];
     userDisconnect: [userID: string];
+    usersConnect: [userIDs: string[]];
     warn: [message: string];
   }
 
@@ -1385,8 +1385,8 @@ declare namespace Eris {
     username: string;
   }
   interface WidgetOptions {
-    channelID?: string | null;
     channel_id?: string | null;
+    channelID?: string | null;
     enabled?: boolean;
     reason?: string;
   }
@@ -1395,17 +1395,17 @@ declare namespace Eris {
   interface AutocompleteInteractionData {
     id: string;
     name: string;
-    type: Constants["ApplicationCommandTypes"]["CHAT_INPUT"];
-    target_id?: string;
     options: InteractionDataOptions[];
+    target_id?: string;
+    type: Constants["ApplicationCommandTypes"]["CHAT_INPUT"];
   }
   interface CommandInteractionData {
     id: string;
     name: string;
-    type: ApplicationCommandTypes;
-    target_id?: string;
-    resolved?: CommandInteractionResolvedData;
     options?: InteractionDataOptions[];
+    resolved?: CommandInteractionResolvedData;
+    target_id?: string;
+    type: ApplicationCommandTypes;
   }
   interface CommandInteractionResolvedData extends InteractionResolvedData {
     messages?: Collection<Message>;
@@ -1417,8 +1417,8 @@ declare namespace Eris {
   interface ComponentInteractionSelectMenuData {
     component_type: SelectMenuTypes;
     custom_id: string;
-    values: string[];
     resolved?: InteractionResolvedData;
+    values: string[];
   }
   interface InteractionAutocomplete {
     choices: ApplicationCommandOptionChoice[];
@@ -1440,9 +1440,9 @@ declare namespace Eris {
     value: V;
   }
   interface InteractionModal {
-    title: string;
-    custom_id: string;
     components: ModalContentActionRow[];
+    custom_id: string;
+    title: string;
   }
   interface InteractionOptions {
     data?: InteractionCallbackData;
@@ -1673,8 +1673,8 @@ declare namespace Eris {
     type: Constants["MessageReferenceTypes"]["FORWARD"];
   }
   interface MessageReferenceReply extends MessageReferenceBase {
-    messageID: string;
     failIfNotExists?: boolean;
+    messageID: string;
     type?: Constants["MessageReferenceTypes"]["DEFAULT"];
   }
   interface MessageSnapshot {
@@ -1802,7 +1802,7 @@ declare namespace Eris {
     flags?: number;
     instance?: boolean;
     party?: { id?: string; size?: [number, number] };
-    secrets?: { join?: string; spectate?: string; match?: string };
+    secrets?: { join?: string; match?: string; spectate?: string };
     state?: string;
     timestamps?: { end?: number; start: number };
     type: T;
@@ -1883,12 +1883,12 @@ declare namespace Eris {
     total_months_subscribed: number;
   }
   interface RoleTags {
+    available_for_purchase?: true;
     bot_id?: string;
+    guild_connections?: true;
     integration_id?: string;
     premium_subscriber?: true;
     subscription_listing_id?: string;
-    available_for_purchase?: true;
-    guild_connections?: true;
   }
 
   // Forum/Thread
@@ -1912,8 +1912,8 @@ declare namespace Eris {
   }
   interface ForumTag extends DefaultReactionEmoji {
     id: string;
-    name: string;
     moderated: boolean;
+    name: string;
   }
   interface GetArchivedThreadsOptions {
     before?: Date;
@@ -1955,8 +1955,8 @@ declare namespace Eris {
   }
 
   interface ModalSubmitInteractionData {
-    custom_id: string;
     components: ModalSubmitInteractionDataComponents[];
+    custom_id: string;
   }
 
   // Voice
@@ -2200,7 +2200,7 @@ declare namespace Eris {
   }
 
   export class Client extends EventEmitter {
-    application?: { id: string; flags: number };
+    application?: { flags: number; id: string };
     bot: boolean;
     channelGuildMap: Record<string, string>;
     dmChannelMap: Record<string, string>;
@@ -3673,7 +3673,7 @@ declare namespace Eris {
     udpSocket: DgramSocket | null;
     volume: number;
     ws: BrowserWebSocket | WebSocket | null;
-    constructor(id: string, options?: { shard?: Shard; shared?: boolean; opusOnly?: boolean });
+    constructor(id: string, options?: { opusOnly?: boolean; shard?: Shard; shared?: boolean });
     connect(data: VoiceConnectData): NodeJS.Timer | void;
     disconnect(error?: Error, reconnecting?: boolean): void;
     emit<K extends keyof VoiceEvents>(event: K, ...args: VoiceEvents[K]): boolean;
