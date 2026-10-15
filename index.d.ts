@@ -890,6 +890,8 @@ declare namespace Eris {
     avatarDecorationData?: AvatarDecorationData | null;
     communicationDisabledUntil?: number | null;
     flags?: number;
+    guildAvatarDecorationData?: AvatarDecorationData | null;
+    guildBanner?: string | null;
     nick: string | null;
     pending?: boolean;
     premiumSince?: number | null;
@@ -1554,6 +1556,9 @@ declare namespace Eris {
     tag: string | null;
   }
   interface MemberOptions {
+    avatar?: string | null;
+    banner?: string | null;
+    bio?: string | null;
     channelID?: string | null;
     communicationDisabledUntil?: Date | null;
     deaf?: boolean;
@@ -3458,6 +3463,10 @@ declare namespace Eris {
     game: Activity | null;
     globalName: string | null;
     guild: Guild;
+    guildAvatarDecorationData?: AvatarDecorationData | null;
+    guildAvatarDecorationURL: string | null;
+    guildBanner?: string | null;
+    guildBannerURL: string | null;
     highestRole: string;
     id: string;
     joinedAt: number | null;
@@ -3481,6 +3490,7 @@ declare namespace Eris {
     /** @deprecated */
     ban(deleteMessageDays?: number, reason?: string): Promise<void>;
     dynamicAvatarURL(format?: ImageFormat, size?: number): string;
+    dynamicGuildBannerURL(format?: ImageFormat, size?: number): string | null;
     edit(options: MemberOptions, reason?: string): Promise<void>;
     kick(reason?: string): Promise<void>;
     removeRole(roleID: string, reason?: string): Promise<void>;
