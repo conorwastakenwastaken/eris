@@ -37,7 +37,8 @@ declare namespace Eris {
   type ApplicationCommandOptionsStringWithAutocomplete = Omit<ApplicationCommandOptionWithChoices<Constants["ApplicationCommandOptionTypes"]["STRING"]>, "choices"> & AutocompleteEnabled;
   type ApplicationCommandOptionsStringWithoutAutocomplete = Omit<ApplicationCommandOptionWithChoices<Constants["ApplicationCommandOptionTypes"]["STRING"]>, "autocomplete"> & AutocompleteDisabled;
   type ApplicationCommandOptionsUser = ApplicationCommandOption<Constants["ApplicationCommandOptionTypes"]["USER"]>;
-  type ApplicationCommandOptionsWithValue = ApplicationCommandOptionsString | ApplicationCommandOptionsInteger | ApplicationCommandOptionsBoolean | ApplicationCommandOptionsUser | ApplicationCommandOptionsChannel | ApplicationCommandOptionsRole | ApplicationCommandOptionsMentionable | ApplicationCommandOptionsNumber;
+  type ApplicationCommandOptionsAttachment = ApplicationCommandOption<Constants["ApplicationCommandOptionTypes"]["ATTACHMENT"]>;
+  type ApplicationCommandOptionsWithValue = ApplicationCommandOptionsAttachment | ApplicationCommandOptionsString | ApplicationCommandOptionsInteger | ApplicationCommandOptionsBoolean | ApplicationCommandOptionsUser | ApplicationCommandOptionsChannel | ApplicationCommandOptionsRole | ApplicationCommandOptionsMentionable | ApplicationCommandOptionsNumber;
   type ApplicationCommandPermissionTypes = Constants["ApplicationCommandPermissionTypes"][keyof Constants["ApplicationCommandPermissionTypes"]];
   type ApplicationCommandTypes = Constants["ApplicationCommandTypes"][keyof Constants["ApplicationCommandTypes"]];
   type ModalSubmitInteractionDataComponent = ModalSubmitInteractionDataTextInputComponent;
@@ -218,12 +219,15 @@ declare namespace Eris {
   // Application Commands
   /** Generic T is `true` if editing Guild scoped commands, and `false` if not */
   interface ApplicationCommandEditOptions<T extends boolean, U = ApplicationCommandTypes> {
+    contexts?: T extends true ? never : (0 | 1 | 2)[] | null;
     defaultMemberPermissions?: bigint | number | string | Permission | null;
     /** @deprecated */
     defaultPermission?: boolean;
-    description?: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] ? string : "" | void;
-    descriptionLocalizations?: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] ? Partial<Record<LocaleStrings, string>> | null : null;
+    description?: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] | Constants["ApplicationCommandTypes"]["PRIMARY_ENTRY_POINT"] ? string : "" | void;
+    descriptionLocalizations?: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] | Constants["ApplicationCommandTypes"]["PRIMARY_ENTRY_POINT"] ? Partial<Record<LocaleStrings, string>> | null : null;
     dmPermission?: T extends true ? never : boolean | null;
+    handler?: T extends true ? never : 1 | 2;
+    integrationTypes?: T extends true ? never : (0 | 1)[];
     name?: string;
     nameLocalizations?: Record<LocaleStrings, string> | null;
     nsfw?: boolean;
@@ -231,18 +235,19 @@ declare namespace Eris {
   }
   /** Generic T is `true` if creating Guild scoped commands, and `false` if not */
   interface ApplicationCommandCreateOptions<T extends boolean, U = ApplicationCommandTypes> extends ApplicationCommandEditOptions<T, U> {
-    description: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] ? string : "" | void;
+    description: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] | Constants["ApplicationCommandTypes"]["PRIMARY_ENTRY_POINT"] ? string : "" | void;
     name: string;
-    type?: U;
+    type?: T extends true ? Exclude<U, Constants["ApplicationCommandTypes"]["PRIMARY_ENTRY_POINT"]> : U;
   }
   /** Generic T is `true` if editing Guild scoped commands, and `false` if not */
   interface ApplicationCommandBulkEditOptions<T extends boolean, U = ApplicationCommandTypes> extends ApplicationCommandCreateOptions<T, U> {
     id?: string;
   }
   interface ApplicationCommandOption<T extends Constants["ApplicationCommandOptionTypes"][Exclude<keyof Constants["ApplicationCommandOptionTypes"], "SUB_COMMAND" | "SUB_COMMAND_GROUP">]> {
-    channel_types: T extends Constants["ApplicationCommandOptionTypes"]["CHANNEL"] ? ChannelTypes[] | undefined : never;
+    channel_types?: T extends Constants["ApplicationCommandOptionTypes"]["CHANNEL"] ? ChannelTypes[] | undefined : never;
     description: string;
     descriptionLocalizations?: Record<LocaleStrings, string> | null;
+    file_types?: T extends Constants["ApplicationCommandOptionTypes"]["ATTACHMENT"] ? string[] : never;
     name: string;
     nameLocalizations?: Record<LocaleStrings, string> | null;
     required?: boolean;
@@ -2121,13 +2126,16 @@ declare namespace Eris {
   /** Generic T is `true` if a Guild scoped command, and `false` if not */
   export class ApplicationCommand<T extends boolean, U = ApplicationCommandTypes> extends Base {
     applicationID: string;
+    contexts?: (0 | 1 | 2)[] | null;
     defaultMemberPermissions: Permission;
     /** @deprecated */
     defaultPermission?: boolean | null;
-    description: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] ? string : "";
+    description: U extends Constants["ApplicationCommandTypes"]["CHAT_INPUT"] | Constants["ApplicationCommandTypes"]["PRIMARY_ENTRY_POINT"] ? string : "";
     descriptionLocalizations?: U extends "CHAT_INPUT" ? Record<LocaleStrings, string> | null : null;
     dmPermission?: boolean;
     guild: T extends true ? PossiblyUncachedGuild : never;
+    handler?: 1 | 2;
+    integrationTypes?: (0 | 1)[];
     name: string;
     nameLocalizations?: Record<LocaleStrings, string> | null;
     nsfw?: boolean;

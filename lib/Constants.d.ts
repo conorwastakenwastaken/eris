@@ -22,6 +22,10 @@ export default interface Constants {
     CUSTOM:    4;
     COMPETING: 5;
   };
+  ApplicationCommandHandlerTypes: {
+    APP_HANDLER:             1;
+    DISCORD_LAUNCH_ACTIVITY: 2;
+  };
   ApplicationCommandOptionTypes: {
     SUB_COMMAND:       1;
     SUB_COMMAND_GROUP: 2;
@@ -33,6 +37,7 @@ export default interface Constants {
     ROLE:              8;
     MENTIONABLE:       9;
     NUMBER:            10;
+    ATTACHMENT:        11;
   };
   ApplicationCommandPermissionTypes: {
     ROLE:    1;
@@ -40,9 +45,14 @@ export default interface Constants {
     CHANNEL: 3;
   };
   ApplicationCommandTypes: {
-    CHAT_INPUT: 1;
-    USER:       2;
-    MESSAGE:    3;
+    CHAT_INPUT:          1;
+    USER:                2;
+    MESSAGE:             3;
+    PRIMARY_ENTRY_POINT: 4;
+  };
+  ApplicationIntegrationTypes: {
+    GUILD_INSTALL: 0;
+    USER_INSTALL:  1;
   };
   AttachmentFlags: {
     IS_REMIX: 4;
@@ -366,6 +376,11 @@ export default interface Constants {
     allNonPrivileged:            53575421;
     allPrivileged:               33026;
     all:                         53608447;
+  };
+  InteractionContextTypes: {
+    GUILD:           0;
+    BOT_DM:          1;
+    PRIVATE_CHANNEL: 2;
   };
   InteractionResponseTypes: {
     PONG:                                    1;
