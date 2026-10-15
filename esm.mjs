@@ -24,6 +24,7 @@ export const {
   DMChannel,
   Emoji,
   Entitlement,
+  SKU,
   ExtendedUser,
   ForumChannel,
   GroupChannel,
