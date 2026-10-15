@@ -725,6 +725,11 @@ export default interface Constants {
     STANDARD: 1;
     GUILD:    2;
   };
+  SubscriptionStatuses: {
+    ACTIVE:   0;
+    INACTIVE: 1;
+    ENDING:   2;
+  };
   SystemChannelFlags: {
     SUPPRESS_JOIN_NOTIFICATIONS:                              1;
     SUPPRESS_PREMIUM_SUBSCRIPTIONS:                           2;
