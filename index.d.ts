@@ -156,9 +156,10 @@ declare namespace Eris {
 
   // Message
   type ActionRowComponents = Button | SelectMenu;
-  type Button = InteractionButton | URLButton;
+  type Button = InteractionButton | URLButton | PremiumButton;
   type ButtonStyles = Constants["ButtonStyles"][keyof Constants["ButtonStyles"]];
-  type Component = ActionRow | ActionRowComponents;
+  type Component = ActionRow | ActionRowComponents | Section | TextDisplay | Thumbnail | MediaGallery | FileComponent | Separator | Container;
+  type MessageComponent = ActionRow | Section | TextDisplay | MediaGallery | FileComponent | Separator | Container;
   type ImageFormat = Constants["ImageFormats"][number];
   type MessageActivityTypes = Constants["MessageActivityTypes"][keyof Constants["MessageActivityTypes"]];
   type MessageContent = string | AdvancedMessageContent;
@@ -1537,7 +1538,33 @@ declare namespace Eris {
   // Message
   interface ActionRow {
     components: ActionRowComponents[];
+    id?: number;
     type: Constants["ComponentTypes"]["ACTION_ROW"];
+  }
+  interface Container {
+    accent_color?: number | null;
+    components: (ActionRow | Section | TextDisplay | MediaGallery | FileComponent | Separator)[];
+    id?: number;
+    spoiler?: boolean;
+    type: Constants["ComponentTypes"]["CONTAINER"];
+  }
+  interface FileComponent {
+    file: UnfurledMediaItem;
+    id?: number;
+    name?: string;
+    size?: number;
+    spoiler?: boolean;
+    type: Constants["ComponentTypes"]["FILE"];
+  }
+  interface MediaGallery {
+    id?: number;
+    items: MediaGalleryItem[];
+    type: Constants["ComponentTypes"]["MEDIA_GALLERY"];
+  }
+  interface MediaGalleryItem {
+    description?: string | null;
+    media: UnfurledMediaItem;
+    spoiler?: boolean;
   }
   interface ModalContentActionRow {
     components: TextInput[];
@@ -1559,7 +1586,7 @@ declare namespace Eris {
   interface AdvancedMessageContentEdit {
     allowedMentions?: AllowedMentions;
     attachments?: PartialAttachment[];
-    components?: ActionRow[];
+    components?: MessageComponent[];
     content?: string;
     /** @deprecated */
     embed?: EmbedOptions;
@@ -1591,6 +1618,7 @@ declare namespace Eris {
   interface ButtonBase {
     disabled?: boolean;
     emoji?: Partial<PartialEmoji>;
+    id?: number;
     label?: string;
     type: Constants["ComponentTypes"]["BUTTON"];
   }
@@ -1605,6 +1633,30 @@ declare namespace Eris {
   interface FileContent {
     file: Buffer | string;
     name: string;
+  }
+  interface PremiumButton {
+    disabled?: boolean;
+    id?: number;
+    sku_id: string;
+    style: Constants["ButtonStyles"]["PREMIUM"];
+    type: Constants["ComponentTypes"]["BUTTON"];
+  }
+  interface Section {
+    accessory: Button | Thumbnail;
+    components: TextDisplay[];
+    id?: number;
+    type: Constants["ComponentTypes"]["SECTION"];
+  }
+  interface Separator {
+    divider?: boolean;
+    id?: number;
+    spacing?: 1 | 2;
+    type: Constants["ComponentTypes"]["SEPARATOR"];
+  }
+  interface TextDisplay {
+    content: string;
+    id?: number;
+    type: Constants["ComponentTypes"]["TEXT_DISPLAY"];
   }
   interface TextInput {
     custom_id: string;
@@ -1634,7 +1686,7 @@ declare namespace Eris {
   }
   interface InteractionButton extends ButtonBase {
     custom_id: string;
-    style: Exclude<ButtonStyles, Constants["ButtonStyles"]["LINK"]>;
+    style: Exclude<ButtonStyles, Constants["ButtonStyles"]["LINK"] | Constants["ButtonStyles"]["PREMIUM"]>;
   }
   interface MessageActivity {
     party_id?: string;
@@ -1729,6 +1781,7 @@ declare namespace Eris {
   interface SelectMenuBase {
     custom_id: string;
     disabled?: boolean;
+    id?: number;
     max_values?: number;
     min_values?: number;
     placeholder?: string;
@@ -1780,6 +1833,21 @@ declare namespace Eris {
     name: string;
     sku_id: string;
     stickers: Sticker[];
+  }
+  interface Thumbnail {
+    description?: string | null;
+    id?: number;
+    media: UnfurledMediaItem;
+    spoiler?: boolean;
+    type: Constants["ComponentTypes"]["THUMBNAIL"];
+  }
+  interface UnfurledMediaItem {
+    attachment_id?: string;
+    content_type?: string;
+    height?: number | null;
+    proxy_url?: string;
+    url: string;
+    width?: number | null;
   }
   interface URLButton extends ButtonBase {
     style: Constants["ButtonStyles"]["LINK"];
@@ -2053,7 +2121,7 @@ declare namespace Eris {
     attachments?: PartialAttachment[];
     auth?: boolean;
     avatarURL?: string;
-    components?: ActionRow[];
+    components?: MessageComponent[];
     content?: string;
     /** @deprecated */
     embed?: EmbedOptions;
@@ -3193,7 +3261,7 @@ declare namespace Eris {
     /** @deprecated */
     cleanContent: string;
     command?: Command;
-    components?: ActionRow[];
+    components?: MessageComponent[];
     content: string;
     createdAt: number;
     editedTimestamp?: number;
