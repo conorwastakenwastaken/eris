@@ -1539,6 +1539,25 @@ declare namespace Eris {
     components: ActionRowComponents[];
     type: Constants["ComponentTypes"]["ACTION_ROW"];
   }
+  interface MessageInteractionMetadata {
+    authorizing_integration_owners: Partial<Record<0 | 1, string>>;
+    id: string;
+    interacted_message_id?: string;
+    original_response_message_id?: string;
+    target_message_id?: string;
+    target_user?: PartialUser;
+    triggering_interaction_metadata?: MessageInteractionMetadata;
+    type: InteractionTypes;
+    user: PartialUser;
+  }
+  interface MessageResolvedData {
+    attachments?: Record<string, Attachment>;
+    channels?: Record<string, Partial<Channel>>;
+    members?: Record<string, Partial<Member>>;
+    messages?: Record<string, Partial<Message>>;
+    roles?: Record<string, Partial<Role>>;
+    users?: Record<string, PartialUser>;
+  }
   interface ModalContentActionRow {
     components: TextInput[];
     type: Constants["ComponentTypes"]["ACTION_ROW"];
@@ -3203,22 +3222,27 @@ declare namespace Eris {
     guildID: T extends GuildTextableWithThreads ? string : undefined;
     id: string;
     interaction: MessageInteraction | null;
+    interactionMetadata?: MessageInteractionMetadata;
     jumpLink: string;
     member: T extends GuildTextableWithThreads ? Member : null;
     mentionEveryone: boolean;
     mentions: User[];
     messageReference: MessageReference | null;
     messageSnapshots?: MessageSnapshot[];
+    nonce?: string | number;
     pinned: boolean;
     poll?: Poll;
+    position?: number;
     prefix?: string;
     reactions: Record<string, Reaction>;
     referencedMessage?: Message | null;
+    resolved?: MessageResolvedData;
     roleMentions: string[];
     roleSubscriptionData?: RoleSubscriptionData;
     stickerItems?: StickerItems[];
     /** @deprecated */
     stickers?: Sticker[];
+    thread?: AnyThreadChannel;
     timestamp: number;
     tts: boolean;
     type: number;
