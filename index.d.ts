@@ -2140,6 +2140,10 @@ declare namespace Eris {
     permissions?: bigint | number | string | Permission;
     unicodeEmoji?: string;
   }
+  interface RolePosition {
+    id: string;
+    position?: number | null;
+  }
   interface RoleSubscriptionData {
     is_renewal: boolean;
     role_subscription_listing_id: string;
@@ -2754,6 +2758,7 @@ declare namespace Eris {
     editRole(guildID: string, roleID: string, options: RoleOptions, reason?: string): Promise<Role>; // TODO not all options are available?
     editRoleConnectionMetadataRecords(data: ApplicationRoleConnectionMetadata[]): Promise<ApplicationRoleConnectionMetadata[]>;
     editRolePosition(guildID: string, roleID: string, position: number): Promise<void>;
+    editRolePositions(guildID: string, rolePositions: RolePosition[], reason?: string): Promise<Role[]>;
     editSelf(options: EditSelfOptions): Promise<ExtendedUser>;
     editStageInstance(channelID: string, options: StageInstanceOptions): Promise<StageInstance>;
     editStatus(status: SelfStatus, activities?: ActivityPartial<ActivityType>[] | ActivityPartial<ActivityType>): void;
@@ -3217,6 +3222,7 @@ declare namespace Eris {
     editNickname(nick: string): Promise<void>;
     editOnboarding(options: GuildOnboardingOptions, reason?: string): Promise<GuildOnboarding>;
     editRole(roleID: string, options: RoleOptions): Promise<Role>;
+    editRolePositions(rolePositions: RolePosition[], reason?: string): Promise<Role[]>;
     editScheduledEvent<T extends GuildScheduledEventEntityTypes>(eventID: string, event: GuildScheduledEventEditOptions<T>, reason?: string): Promise<GuildScheduledEvent<T>>;
     editSticker(stickerID: string, options?: EditStickerOptions, reason?: string): Promise<Sticker>;
     editTemplate(code: string, options: GuildTemplateOptions): Promise<GuildTemplate>;
