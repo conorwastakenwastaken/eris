@@ -27,6 +27,7 @@ export const {
   ForumChannel,
   GroupChannel,
   Guild,
+  GuildAuditLogEntry,
   GuildChannel,
   GuildIntegration,
   GuildPreview,

@@ -28,6 +28,7 @@ Eris.ExtendedUser = require("./lib/structures/ExtendedUser");
 Eris.ForumChannel = require("./lib/structures/ForumChannel");
 Eris.GroupChannel = require("./lib/structures/GroupChannel");
 Eris.Guild = require("./lib/structures/Guild");
+Eris.GuildAuditLogEntry = require("./lib/structures/GuildAuditLogEntry");
 Eris.GuildChannel = require("./lib/structures/GuildChannel");
 Eris.GuildIntegration = require("./lib/structures/GuildIntegration");
 Eris.GuildPreview = require("./lib/structures/GuildPreview");
