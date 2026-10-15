@@ -2422,6 +2422,7 @@ declare namespace Eris {
     getMessages(channelID: string, options?: GetMessagesOptions): Promise<Message[]>;
     /** @deprecated */
     getMessages(channelID: string, limit?: number, before?: string, after?: string, around?: string): Promise<Message[]>;
+    /** @deprecated */
     getNitroStickerPacks(): Promise<{ sticker_packs: StickerPack[] }>;
     getOAuthApplication(): Promise<OAuthApplicationInfo>;
     /** @deprecated */
