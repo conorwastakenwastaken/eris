@@ -528,6 +528,7 @@ declare namespace Eris {
     agent?: HTTPSAgent;
     allowedMentions?: AllowedMentions;
     autoreconnect?: boolean;
+    capabilities?: number;
     compress?: boolean;
     connectionTimeout?: number;
     defaultImageFormat?: string;
@@ -2864,6 +2865,7 @@ declare namespace Eris {
     flags: number;
     guild: Guild;
     name: string;
+    obfuscated: boolean;
     parentID: string | null;
     type: GuildChannelTypes;
     delete(reason?: string): Promise<AnyGuildChannel>;
