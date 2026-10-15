@@ -23,6 +23,7 @@ export const {
   DiscordRESTError,
   DMChannel,
   Emoji,
+  Entitlement,
   ExtendedUser,
   ForumChannel,
   GroupChannel,

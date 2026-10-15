@@ -750,6 +750,23 @@ declare namespace Eris {
     name: string;
   }
 
+  // Entitlement
+  interface CreateTestEntitlementOptions {
+    ownerID: string;
+    ownerType: 1 | 2;
+    skuID: string;
+  }
+  interface GetEntitlementsOptions {
+    after?: string;
+    before?: string;
+    excludeDeleted?: boolean;
+    excludeEnded?: boolean;
+    guildID?: string;
+    limit?: number;
+    skuIDs?: string[];
+    userID?: string;
+  }
+
   // Events
   interface OldAutoModerationRule {
     actions: AutoModerationAction[];
@@ -1014,6 +1031,9 @@ declare namespace Eris {
     webhooksUpdate: [data: WebhookData];
   }
   interface ClientEvents extends EventListeners {
+    entitlementCreate: [data: Entitlement];
+    entitlementDelete: [data: Entitlement];
+    entitlementUpdate: [data: Entitlement];
     shardDisconnect: [err: Error | undefined, id: number];
     shardReady: [id: number];
     shardResume: [id: number];
@@ -2241,6 +2261,7 @@ declare namespace Eris {
     bulkEditGuildCommands(guildID: string, commands: ApplicationCommandBulkEditOptions<true>[]): Promise<ApplicationCommand<true>[]>;
     closeVoiceConnection(guildID: string): void;
     connect(): Promise<void>;
+    consumeEntitlement(entitlementID: string): Promise<void>;
     createAutoModerationRule(guildID: string, rule: AutoModerationCreateOptions): Promise<AutoModerationRule>;
     createChannel(guildID: string, name: string): Promise<TextChannel>;
     createChannel<T extends GuildChannelTypes>(guildID: string, name: string, type: T, options?: CreateChannelOptions): Promise<ChannelTypeConversion<T>>;
@@ -2269,6 +2290,7 @@ declare namespace Eris {
     createMessage(channelID: string, content: MessageContent, file?: FileContent | FileContent[]): Promise<Message>;
     createRole(guildID: string, options?: Role | RoleOptions, reason?: string): Promise<Role>;
     createStageInstance(channelID: string, options: StageInstanceOptions): Promise<StageInstance>;
+    createTestEntitlement(options: CreateTestEntitlementOptions): Promise<Entitlement>;
     createThread(channelID: string, options: CreateForumThreadOptions, file?: FileContent | FileContent[]): Promise<PublicThreadChannel<true>>;
     createThread(channelID: string, options: CreateThreadWithoutMessageOptions, file?: FileContent | FileContent[]): Promise<NewsThreadChannel | PrivateThreadChannel | PublicThreadChannel>;
     createThreadWithMessage(channelID: string, messageID: string, options: CreateThreadOptions): Promise<NewsThreadChannel | PublicThreadChannel>;
@@ -2293,6 +2315,7 @@ declare namespace Eris {
     deleteMessages(channelID: string, messageIDs: string[], reason?: string): Promise<void>;
     deleteRole(guildID: string, roleID: string, reason?: string): Promise<void>;
     deleteStageInstance(channelID: string): Promise<void>;
+    deleteTestEntitlement(entitlementID: string): Promise<void>;
     deleteWebhook(webhookID: string, token?: string, reason?: string): Promise<void>;
     deleteWebhookMessage(webhookID: string, token: string, messageID: string): Promise<void>;
     disconnect(options: { reconnect?: boolean | "auto" }): void;
@@ -2382,6 +2405,8 @@ declare namespace Eris {
     getEmoji(emojiID: string): Promise<Emoji>;
     getEmojiGuild(emojiID: string): Promise<Guild>;
     getEmojis(): Promise<ApplicationEmojis>;
+    getEntitlement(entitlementID: string): Promise<Entitlement>;
+    getEntitlements(options?: GetEntitlementsOptions): Promise<Entitlement[]>;
     getGateway(): Promise<{ url: string }>;
     getGuildAuditLog(guildID: string, options?: GetGuildAuditLogOptions): Promise<GuildAuditLog>;
     /** @deprecated */
@@ -2628,6 +2653,20 @@ declare namespace Eris {
     sendTyping(): Promise<void>;
     unpinMessage(messageID: string): Promise<void>;
     unsendMessage(messageID: string): Promise<void>;
+  }
+
+  export class Entitlement extends Base {
+    applicationID: string;
+    consumed?: boolean;
+    deleted: boolean;
+    endsAt: number | null | undefined;
+    guildID?: string;
+    skuID: string;
+    startsAt: number | null | undefined;
+    type: number;
+    userID?: string;
+    constructor(data: BaseData);
+    update(data: BaseData): void;
   }
 
   export class ExtendedUser extends User {
@@ -3023,6 +3062,7 @@ declare namespace Eris {
   export class Interaction extends Base {
     acknowledged: boolean;
     applicationID: string;
+    entitlements?: Entitlement[];
     id: string;
     token: string;
     type: number;
