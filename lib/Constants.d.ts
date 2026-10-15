@@ -214,6 +214,20 @@ export default interface Constants {
     ALL_MESSAGES:  0;
     ONLY_MENTIONS: 1;
   };
+  EntitlementOwnerTypes: {
+    GUILD: 1;
+    USER:  2;
+  };
+  EntitlementTypes: {
+    PURCHASE:                 1;
+    PREMIUM_SUBSCRIPTION:     2;
+    DEVELOPER_GIFT:           3;
+    TEST_MODE_PURCHASE:       4;
+    FREE_PURCHASE:            5;
+    USER_GIFT:                6;
+    PREMIUM_PURCHASE:         7;
+    APPLICATION_SUBSCRIPTION: 8;
+  };
   ExplicitContentFilterLevels: {
     DISABLED:              0;
     MEMBERS_WITHOUT_ROLES: 1;
