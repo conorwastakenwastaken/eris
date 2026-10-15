@@ -684,15 +684,15 @@ export default interface Constants {
     "Good to see you, %user%.",
     "Yay you made it, %user%!",
   ];
+  TextInputStyles: {
+    SHORT:     1;
+    PARAGRAPH: 2;
+  };
   ThreadMemberFlags: {
     HAS_INTERACTED: 1;
     ALL_MESSAGES:   2;
     ONLY_MENTIONS:  4;
     NO_MESSAGES:    8;
-  };
-  TextInputStyles: {
-    SHORT:     1;
-    PARAGRAPH: 2;
   };
   UserFlags: {
     NONE:                         0;
