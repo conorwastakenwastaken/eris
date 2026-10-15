@@ -169,6 +169,7 @@ export default interface Constants {
     PINNED:                      1;
     REQUIRE_TAG:                 16;
     HIDE_MEDIA_DOWNLOAD_OPTIONS: 32768;
+    CHANNEL_OBFUSCATED:          131072;
   };
   ChannelTypes: {
     GUILD_TEXT:           0;
@@ -237,6 +238,9 @@ export default interface Constants {
     NOT_SET:      0;
     LIST_VIEW:    1;
     GALLERY_VIEW: 2;
+  };
+  GatewayCapabilities: {
+    CHANNEL_OBFUSCATION: 32768;
   };
   GatewayOPCodes: {
     DISPATCH:                  0;
