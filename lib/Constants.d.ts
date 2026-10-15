@@ -218,6 +218,7 @@ export default interface Constants {
     HEARTBEAT_ACK:             11;
     // Unknown 12-30
     REQUEST_SOUNDBOARD_SOUNDS: 31;
+    REQUEST_CHANNEL_INFO:      43;
   };
   GuildFeatures: [
     "ANIMATED_BANNER",
