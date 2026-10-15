@@ -231,6 +231,8 @@ export default interface Constants {
     "DEVELOPER_SUPPORT_SERVER",
     "DISCOVERABLE",
     "FEATURABLE",
+    "GUESTS_ENABLED",
+    "GUILD_TAGS",
     "INVITES_DISABLED",
     "INVITE_SPLASH",
     "MEMBER_VERIFICATION_GATE_ENABLED",
@@ -239,6 +241,7 @@ export default interface Constants {
     "NEWS",
     "PARTNERED",
     "PREVIEW_ENABLED",
+    "PRUNE_REQUIRES_ADMIN",
     "RAID_ALERTS_DISABLED",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
@@ -432,6 +435,7 @@ export default interface Constants {
     AUTOMOD_QUARANTINED_USERNAME:    128;
     // Unknown 1 << 8 (256)
     DM_SETTINGS_UPSELL_ACKNOWLEDGED: 512;
+    AUTOMOD_QUARANTINED_GUILD_TAG:   1024;
   };
   MembershipState: {
     INVITED:  1;
