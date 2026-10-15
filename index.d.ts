@@ -3141,6 +3141,7 @@ declare namespace Eris {
     nsfw: boolean;
     nsfwLevel: NSFWLevel;
     ownerID: string;
+    permissions?: Permission;
     preferredLocale: LocaleStrings;
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
