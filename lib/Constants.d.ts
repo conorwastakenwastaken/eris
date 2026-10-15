@@ -256,6 +256,12 @@ export default interface Constants {
     ALL_MESSAGES:  0;
     ONLY_MENTIONS: 1;
   };
+  EmbedFlags: {
+    IS_CONTENT_INVENTORY_ENTRY: 32;
+  };
+  EmbedImageFlags: {
+    IS_ANIMATED: 32;
+  };
   EntitlementOwnerTypes: {
     GUILD: 1;
     USER:  2;

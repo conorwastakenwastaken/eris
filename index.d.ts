@@ -693,6 +693,8 @@ declare namespace Eris {
   // Omit<T, K> used to override
   interface Embed extends Omit<EmbedOptions, "footer" | "image" | "thumbnail" | "author"> {
     author?: EmbedAuthor;
+    components?: { id?: number; type: number; [key: string]: unknown }[];
+    flags?: number;
     footer?: EmbedFooter;
     image?: EmbedImage;
     provider?: EmbedProvider;
@@ -721,7 +723,12 @@ declare namespace Eris {
     text: string;
   }
   interface EmbedImage extends EmbedImageOptions {
+    content_type?: string;
+    description?: string;
+    flags?: number;
     height?: number;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url?: string;
     width?: number;
   }
@@ -745,7 +752,12 @@ declare namespace Eris {
     url?: string;
   }
   interface EmbedVideo {
+    content_type?: string;
+    description?: string;
+    flags?: number;
     height?: number;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url?: string;
     url?: string;
     width?: number;
