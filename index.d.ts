@@ -1613,6 +1613,9 @@ declare namespace Eris {
     users?: boolean | string[];
   }
   interface Attachment extends PartialAttachment {
+    application?: Partial<OAuthApplicationInfo>;
+    clip_created_at?: string;
+    clip_participants?: PartialUser[];
     content_type?: string;
     duration_secs?: number;
     ephemeral?: boolean;
@@ -1622,6 +1625,7 @@ declare namespace Eris {
     id: string;
     proxy_url: string;
     size: number;
+    title?: string;
     url: string;
     waveform?: string;
     width?: number;
@@ -1749,6 +1753,7 @@ declare namespace Eris {
     description?: string;
     filename?: string;
     id: string | number;
+    is_spoiler?: boolean;
   }
   interface Poll {
     allow_multiselect: boolean;

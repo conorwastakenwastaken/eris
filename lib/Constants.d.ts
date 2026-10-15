@@ -55,7 +55,11 @@ export default interface Constants {
     USER_INSTALL:  1;
   };
   AttachmentFlags: {
-    IS_REMIX: 4;
+    IS_CLIP:      1;
+    IS_THUMBNAIL: 2;
+    IS_REMIX:     4;
+    IS_SPOILER:   8;
+    IS_ANIMATED:  32;
   };
   AuditLogActions: {
     GUILD_UPDATE: 1;
