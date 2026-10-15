@@ -413,6 +413,11 @@ declare namespace Eris {
     channel_id: string;
     webhook_id: string;
   }
+  interface ChannelInfo {
+    id: string;
+    status?: string | null;
+    voiceStartTime?: number | null;
+  }
   interface ChannelPosition extends EditChannelPositionOptions {
     id: string;
     position?: number;
@@ -505,6 +510,10 @@ declare namespace Eris {
   interface GroupRecipientOptions {
     accessToken: string;
     nick?: string;
+  }
+  interface GuildChannelInfo {
+    channels: ChannelInfo[];
+    guildID: string;
   }
   interface PartialChannel {
     bitrate?: number;
@@ -1073,6 +1082,7 @@ declare namespace Eris {
     webhooksUpdate: [data: WebhookData];
   }
   interface ClientEvents extends EventListeners {
+    channelInfo: [data: GuildChannelInfo];
     entitlementCreate: [data: Entitlement];
     entitlementDelete: [data: Entitlement];
     entitlementUpdate: [data: Entitlement];
@@ -1085,6 +1095,7 @@ declare namespace Eris {
     subscriptionCreate: [data: Subscription];
     subscriptionDelete: [data: Subscription];
     subscriptionUpdate: [data: Subscription];
+    voiceChannelStartTimeUpdate: [channel: VoiceChannel | Uncached, oldChannel: { voiceStartTime?: number | null } | null];
   }
   interface ShardEvents extends EventListeners {
     resume: [];
@@ -2841,6 +2852,7 @@ declare namespace Eris {
     removeMessageReaction(channelID: string, messageID: string, reaction: string, userID?: string): Promise<void>;
     removeMessageReactionEmoji(channelID: string, messageID: string, reaction: string): Promise<void>;
     removeMessageReactions(channelID: string, messageID: string): Promise<void>;
+    requestChannelInfo(guildID: string, fields?: ("status" | "voice_start_time")[]): void;
     searchGuildMembers(guildID: string, query: string, limit?: number): Promise<Member[]>;
     searchGuildMessages(guildID: string, options?: SearchGuildMessagesOptions): Promise<GuildMessageSearchResult | GuildMessageSearchIndexing>;
     sendChannelTyping(channelID: string): Promise<void>;
@@ -4036,6 +4048,7 @@ declare namespace Eris {
     userLimit: number;
     videoQualityMode: VideoQualityMode;
     voiceMembers: Collection<Member>;
+    voiceStartTime?: number | null;
     createInvite(options?: CreateInviteOptions, reason?: string): Promise<Invite<"withMetadata", this>>;
     createWebhook(options: WebhookCreateOptions, reason?: string | undefined): Promise<Webhook>;
     deletePermission(overwriteID: string, reason?: string): Promise<void>;
