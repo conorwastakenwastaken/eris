@@ -2314,7 +2314,9 @@ declare namespace Eris {
     shared?: boolean;
   }
   interface StageInstanceOptions {
+    guildScheduledEventID?: string;
     privacyLevel?: StageInstancePrivacyLevel;
+    sendStartNotification?: boolean;
     topic?: string;
   }
   interface UncachedMemberVoiceState {
@@ -3980,6 +3982,7 @@ declare namespace Eris {
     client: Client;
     discoverableDisabled: boolean;
     guild: Guild | Uncached;
+    guildScheduledEventID?: string | null;
     privacyLevel: StageInstancePrivacyLevel;
     topic: string;
     constructor(data: BaseData, client: Client);
