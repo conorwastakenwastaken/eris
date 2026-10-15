@@ -190,6 +190,11 @@ export default interface Constants {
     FILE:               13;
     SEPARATOR:          14;
     CONTAINER:          17;
+    LABEL:              18;
+    FILE_UPLOAD:        19;
+    RADIO_GROUP:        21;
+    CHECKBOX_GROUP:     22;
+    CHECKBOX:           23;
   };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
