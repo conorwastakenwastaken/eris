@@ -2450,6 +2450,7 @@ declare namespace Eris {
     getRESTUser(userID: string): Promise<User>;
     getRoleConnectionMetadataRecords(): Promise<ApplicationRoleConnectionMetadata[]>;
     getSelf(): Promise<ExtendedUser>;
+    getSKUs(): Promise<SKU[]>;
     getSoundboardSounds(): Promise<SoundboardSound<false>[]>;
     getStageInstance(channelID: string): Promise<StageInstance>;
     getStickerPack(packID: string): Promise<StickerPack>;
@@ -3472,6 +3473,16 @@ declare namespace Eris {
     stopPlaying(): void;
     on<K extends keyof StreamEvents>(event: K, listener: (...args: StreamEvents[K]) => void): this;
     on(event: string, listener: (...args: any[]) => void): this;
+  }
+
+  export class SKU extends Base {
+    applicationID: string;
+    flags: number;
+    name: string;
+    slug: string;
+    type: number;
+    constructor(data: BaseData);
+    update(data: BaseData): void;
   }
 
   export class SoundboardSound<G = true> extends Base {

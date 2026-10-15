@@ -643,6 +643,17 @@ export default interface Constants {
   RoleFlags: {
     IN_PROMPT: 1;
   };
+  SKUFlags: {
+    AVAILABLE:          4;
+    GUILD_SUBSCRIPTION: 128;
+    USER_SUBSCRIPTION:  256;
+  };
+  SKUTypes: {
+    DURABLE:            2;
+    CONSUMABLE:         3;
+    SUBSCRIPTION:       5;
+    SUBSCRIPTION_GROUP: 6;
+  };
   SortOrderTypes: {
     LATEST_ACTIVITY: 0;
     CREATION_DATE:   1;

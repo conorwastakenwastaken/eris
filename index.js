@@ -24,6 +24,7 @@ Eris.DiscordHTTPError = require("./lib/errors/DiscordHTTPError");
 Eris.DiscordRESTError = require("./lib/errors/DiscordRESTError");
 Eris.DMChannel = require("./lib/structures/DMChannel");
 Eris.Emoji = require("./lib/structures/Emoji");
+Eris.SKU = require("./lib/structures/SKU");
 Eris.ExtendedUser = require("./lib/structures/ExtendedUser");
 Eris.ForumChannel = require("./lib/structures/ForumChannel");
 Eris.GroupChannel = require("./lib/structures/GroupChannel");
