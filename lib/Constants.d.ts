@@ -437,6 +437,12 @@ export default interface Constants {
     STREAM:               1;
     EMBEDDED_APPLICATION: 2;
   };
+  InviteTargetUsersJobStatuses: {
+    UNSPECIFIED: 0;
+    PROCESSING:  1;
+    COMPLETED:   2;
+    FAILED:      3;
+  };
   Locales: {
     BULGARIAN:            "bg";
     CZECH:                "cs";

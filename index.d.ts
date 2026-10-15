@@ -1493,9 +1493,12 @@ declare namespace Eris {
 
   // Invite
   interface CreateChannelInviteOptions extends CreateInviteOptions {
+    roleIDs?: string[];
     targetApplicationID?: string;
     targetType?: InviteTargetTypes;
     targetUserID?: string;
+    targetUserIDs?: string[];
+    targetUsersFile?: FileContent;
   }
   interface CreateInviteOptions {
     maxAge?: number;
@@ -1520,7 +1523,14 @@ declare namespace Eris {
     speakerCount: number;
     topic: string;
   }
-
+  interface InviteTargetUsersJobStatus {
+    completedAt: number | null;
+    createdAt: number;
+    errorMessage?: string | null;
+    processedUsers: number;
+    status: 0 | 1 | 2 | 3;
+    totalUsers: number;
+  }
   // Member/User
   interface AvatarDecorationData {
     asset: string;
@@ -2470,6 +2480,8 @@ declare namespace Eris {
     addGuildDiscoverySubcategory(guildID: string, categoryID: string, reason?: string): Promise<DiscoverySubcategoryResponse>;
     addGuildMember(guildID: string, userID: string, accessToken: string, options?: AddGuildMemberOptions): Promise<void>;
     addGuildMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void>;
+    addInviteTargetUser(inviteID: string, userID: string): Promise<void>;
+    addInviteTargetUsers(inviteID: string, userIDs: string[]): Promise<void>;
     addMessageReaction(channelID: string, messageID: string, reaction: string): Promise<void>;
     banGuildMember(guildID: string, userID: string, options?: BanMemberOptions): Promise<void>;
     /** @deprecated */
@@ -2578,6 +2590,7 @@ declare namespace Eris {
     editGuildVoiceState(guildID: string, options: VoiceStateOptions, userID?: string): Promise<void>;
     editGuildWelcomeScreen(guildID: string, options: WelcomeScreenOptions): Promise<WelcomeScreen>;
     editGuildWidget(guildID: string, options: WidgetOptions): Promise<Widget>;
+    editInviteTargetUsers(inviteID: string, file: FileContent): Promise<void>;
     editMessage(channelID: string, messageID: string, content: MessageContentEdit): Promise<Message>;
     /** @deprecated */
     editNickname(guildID: string, nick: string, reason?: string): Promise<void>;
@@ -2659,6 +2672,8 @@ declare namespace Eris {
     getGuildWidgetSettings(guildID: string): Promise<Widget>;
     getInvite(inviteID: string, withCounts?: false, withExpiration?: boolean, guildScheduledEventID?: string): Promise<Invite<"withoutCount">>;
     getInvite(inviteID: string, withCounts: true, withExpiration?: boolean, guildScheduledEventID?: string): Promise<Invite<"withCount">>;
+    getInviteTargetUsers(inviteID: string): Promise<string>;
+    getInviteTargetUsersJobStatus(inviteID: string): Promise<InviteTargetUsersJobStatus>;
     getJoinedPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ListedChannelThreads<PrivateThreadChannel>>;
     getMessage(channelID: string, messageID: string): Promise<Message>;
     getMessageReaction(channelID: string, messageID: string, reaction: string, options?: GetMessageReactionOptions): Promise<User[]>;
@@ -2730,6 +2745,8 @@ declare namespace Eris {
     ): Promise<number>;
     removeGroupRecipient(groupID: string, userID: string): Promise<void>;
     removeGuildMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void>;
+    removeInviteTargetUser(inviteID: string, userID: string): Promise<void>;
+    removeInviteTargetUsers(inviteID: string, userIDs: string[]): Promise<void>;
     removeMessageReaction(channelID: string, messageID: string, reaction: string, userID?: string): Promise<void>;
     removeMessageReactionEmoji(channelID: string, messageID: string, reaction: string): Promise<void>;
     removeMessageReactions(channelID: string, messageID: string): Promise<void>;
