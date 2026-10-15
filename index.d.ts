@@ -3162,6 +3162,7 @@ declare namespace Eris {
     permission: Permission;
     permissions: Permission;
     premiumSince?: number | null;
+    primaryGuild?: UserPrimaryGuild | null;
     roles: string[];
     staticAvatarURL: string;
     status?: UserStatus;
