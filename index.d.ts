@@ -218,6 +218,37 @@ declare namespace Eris {
     toJSON(props?: string[]): JSONCache;
   }
 
+  // Application
+  interface ApplicationActivityInstance {
+    application_id: string;
+    instance_id: string;
+    launch_id: string;
+    location: { channel_id?: string; guild_id?: string; id: string; kind: string };
+    users: string[];
+  }
+  interface ApplicationInstallParams {
+    permissions: string;
+    scopes: string[];
+  }
+  interface ApplicationIntegrationTypeConfiguration {
+    oauth2_install_params?: ApplicationInstallParams;
+  }
+  interface EditApplicationOptions {
+    coverImage?: string | null;
+    customInstallURL?: string;
+    description?: string;
+    eventWebhooksStatus?: 1 | 2;
+    eventWebhooksTypes?: string[];
+    eventWebhooksURL?: string;
+    flags?: number;
+    icon?: string | null;
+    installParams?: ApplicationInstallParams;
+    integrationTypesConfig?: Partial<Record<0 | 1, ApplicationIntegrationTypeConfiguration>>;
+    interactionsEndpointURL?: string;
+    roleConnectionsVerificationURL?: string;
+    tags?: string[];
+  }
+
   // Application Commands
   /** Generic T is `true` if editing Guild scoped commands, and `false` if not */
   interface ApplicationCommandEditOptions<T extends boolean, U = ApplicationCommandTypes> {
@@ -2343,17 +2374,36 @@ declare namespace Eris {
     [key: string]: unknown;
   }
   interface OAuthApplicationInfo {
+    approximate_guild_count?: number;
+    approximate_user_authorization_count?: number;
+    approximate_user_install_count?: number;
     bot?: PartialUser;
     bot_public: boolean;
     bot_require_code_grant: boolean;
+    cover_image?: string | null;
+    custom_install_url?: string;
     description: string;
+    event_webhooks_status?: 1 | 2 | 3;
+    event_webhooks_types?: string[];
+    event_webhooks_url?: string | null;
+    flags?: number;
+    flags_new?: string;
+    guild?: Partial<Guild>;
+    guild_id?: string;
     icon: string | null;
     id: string;
+    install_params?: ApplicationInstallParams;
+    integration_types_config?: Partial<Record<0 | 1, ApplicationIntegrationTypeConfiguration>>;
+    interactions_endpoint_url?: string | null;
     name: string;
     owner: PartialUser;
+    primary_sku_id?: string;
     privacy_policy_url?: string;
+    redirect_uris?: string[];
     role_connections_verification_url?: string;
     rpc_origins?: string[];
+    slug?: string;
+    tags?: string[];
     team: OAuthTeamInfo | null;
     terms_of_service_url?: string;
     verify_key: string;
@@ -2579,6 +2629,7 @@ declare namespace Eris {
     deleteWebhookMessage(webhookID: string, token: string, messageID: string): Promise<void>;
     disconnect(options: { reconnect?: boolean | "auto" }): void;
     editAFK(afk: boolean): void;
+    editApplication(options: EditApplicationOptions): Promise<OAuthApplicationInfo>;
     editAutoModerationRule<T extends AutoModerationTriggerType>(guildID: string, ruleID: string, options: AutoModerationEditOptions<T>): Promise<AutoModerationRule>;
     editChannel(
       channelID: string,
@@ -2650,6 +2701,8 @@ declare namespace Eris {
     executeWebhook(webhookID: string, token: string, options: WebhookPayload): Promise<void>;
     followChannel(channelID: string, webhookChannelID: string, reason?: string): Promise<ChannelFollow>;
     getActiveGuildThreads(guildID: string): Promise<ListedGuildThreads>;
+    getApplication(): Promise<OAuthApplicationInfo>;
+    getApplicationActivityInstance(instanceID: string): Promise<ApplicationActivityInstance>;
     getArchivedThreads(channelID: string, type: "private", options?: GetArchivedThreadsOptions): Promise<ListedChannelThreads<PrivateThreadChannel>>;
     getArchivedThreads(channelID: string, type: "public", options?: GetArchivedThreadsOptions): Promise<ListedChannelThreads<PublicThreadChannel<boolean>>>;
     getAutoModerationRule(guildID: string, ruleID: string): Promise<AutoModerationRule>;
