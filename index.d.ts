@@ -1264,7 +1264,9 @@ declare namespace Eris {
     withCounts?: boolean;
   }
   interface GuildAuditLog {
+    autoModerationRules: AutoModerationRule[];
     entries: GuildAuditLogEntry[];
+    guildScheduledEvents: GuildScheduledEvent[];
     integrations: GuildIntegration[];
     threads: AnyThreadChannel[];
     users: User[];
@@ -3306,10 +3308,10 @@ declare namespace Eris {
     reason: string | null;
     role?: Role | { id: string; name: string };
     status?: string;
-    target?: Guild | AnyGuildChannel | Member | Role | Invite | Emoji | Sticker | Message<AnyGuildTextableChannel> | null;
+    target?: Guild | AnyGuildChannel | Member | Role | Invite | Emoji | Sticker | Message<AnyGuildTextableChannel> | GuildScheduledEvent | StageInstance | SoundboardSound | AutoModerationRule | User | null;
     targetID: string;
     user: PossiblyUncachedUser;
-    constructor(data: BaseData, guild: Guild);
+    constructor(data: BaseData, client: Client);
   }
 
   export class GuildChannel extends Channel {
