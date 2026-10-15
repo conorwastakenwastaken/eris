@@ -3306,8 +3306,10 @@ declare namespace Eris {
   }
 
   export class GuildChannel extends Channel {
+    applicationID?: string | null;
     flags: number;
     guild: Guild;
+    managed?: boolean;
     name: string;
     obfuscated: boolean;
     parentID: string | null;
