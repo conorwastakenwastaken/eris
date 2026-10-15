@@ -1017,6 +1017,9 @@ declare namespace Eris {
     shardDisconnect: [err: Error | undefined, id: number];
     shardReady: [id: number];
     shardResume: [id: number];
+    subscriptionCreate: [data: Subscription];
+    subscriptionDelete: [data: Subscription];
+    subscriptionUpdate: [data: Subscription];
   }
   interface ShardEvents extends EventListeners {
     resume: [];
@@ -1959,6 +1962,14 @@ declare namespace Eris {
     custom_id: string;
   }
 
+  // Subscription
+  interface GetSKUSubscriptionsOptions {
+    after?: string;
+    before?: string;
+    limit?: number;
+    userID: string;
+  }
+
   // Voice
   interface JoinVoiceChannelOptions {
     opusOnly?: boolean;
@@ -2450,6 +2461,8 @@ declare namespace Eris {
     getRESTUser(userID: string): Promise<User>;
     getRoleConnectionMetadataRecords(): Promise<ApplicationRoleConnectionMetadata[]>;
     getSelf(): Promise<ExtendedUser>;
+    getSKUSubscription(skuID: string, subscriptionID: string): Promise<Subscription>;
+    getSKUSubscriptions(skuID: string, options: GetSKUSubscriptionsOptions): Promise<Subscription[]>;
     getSoundboardSounds(): Promise<SoundboardSound<false>[]>;
     getStageInstance(channelID: string): Promise<StageInstance>;
     getStickerPack(packID: string): Promise<StickerPack>;
@@ -3507,6 +3520,19 @@ declare namespace Eris {
     update(data: BaseData): void;
     delete(): Promise<void>;
     edit(options: StageInstanceOptions): Promise<StageInstance>;
+  }
+
+  export class Subscription extends Base {
+    canceledAt: number | null;
+    currentPeriodEnd: number;
+    currentPeriodStart: number;
+    entitlementIDs: string[];
+    renewalSKUIDs: string[] | null;
+    skuIDs: string[];
+    status: number;
+    userID: string;
+    constructor(data: BaseData);
+    update(data: BaseData): void;
   }
 
   export class TextChannel extends GuildTextableChannel implements Invitable, Permissionable, Pinnable {

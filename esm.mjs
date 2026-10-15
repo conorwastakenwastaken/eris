@@ -54,6 +54,7 @@ export const {
   SoundboardSound,
   StageChannel,
   StageInstance,
+  Subscription,
   TextChannel,
   ThreadChannel,
   ThreadMember,
