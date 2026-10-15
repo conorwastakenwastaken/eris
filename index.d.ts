@@ -1430,6 +1430,10 @@ declare namespace Eris {
   interface InteractionAutocomplete {
     choices: ApplicationCommandOptionChoice[];
   }
+  interface InteractionCallbackResponse {
+    interaction: { activity_instance_id?: string; id: string; response_message_ephemeral?: boolean; response_message_id?: string; response_message_loading?: boolean; type: InteractionTypes };
+    resource?: { activity_instance?: { id: string }; message?: Message; type: InteractionResponseTypes };
+  }
   interface InteractionDataOptionsSubCommand {
     name: string;
     options?: InteractionDataOptions[];
@@ -1456,6 +1460,7 @@ declare namespace Eris {
     type: InteractionResponseTypes;
   }
   interface InteractionResolvedData {
+    attachments?: Record<string, Attachment>;
     channels?: Collection<AnyChannel>;
     members?: Collection<Member>;
     roles?: Collection<Role>;
@@ -2346,7 +2351,9 @@ declare namespace Eris {
   }
 
   export class Channel extends Base {
+    appPermissions?: Permission;
     mention: string;
+    permissions?: Permission;
     type: ChannelTypes;
     constructor(data: BaseData, client: Client);
     static from(data: BaseData, client: Client): AnyChannel;
@@ -2418,7 +2425,9 @@ declare namespace Eris {
     createGuildSoundboardSound(guildID: string, sound: GuildSoundboardSoundCreate, reason?: string): Promise<SoundboardSound>;
     createGuildSticker(guildID: string, options: CreateStickerOptions, reason?: string): Promise<Sticker>;
     createGuildTemplate(guildID: string, name: string, description?: string | null): Promise<GuildTemplate>;
-    createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionOptions, file?: FileContent | FileContent[]): Promise<void>;
+    createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionOptions, file?: FileContent | FileContent[], withResponse?: false): Promise<void>;
+    createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionOptions, file: FileContent | FileContent[] | undefined, withResponse: true): Promise<InteractionCallbackResponse>;
+    createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionOptions, file: FileContent | FileContent[] | undefined, withResponse: boolean): Promise<InteractionCallbackResponse | void>;
     createMessage(channelID: string, content: MessageContent, file?: FileContent | FileContent[]): Promise<Message>;
     createRole(guildID: string, options?: Role | RoleOptions, reason?: string): Promise<Role>;
     createStageInstance(channelID: string, options: StageInstanceOptions): Promise<StageInstance>;
@@ -3176,7 +3185,13 @@ declare namespace Eris {
   export class Interaction extends Base {
     acknowledged: boolean;
     applicationID: string;
+    appPermissions?: Permission;
+    attachmentSizeLimit?: number;
+    authorizingIntegrationOwners?: Partial<Record<0 | 1, string>>;
+    context?: number;
+    guildLocale?: string;
     id: string;
+    locale?: string;
     token: string;
     type: number;
     version: number;
@@ -3207,6 +3222,7 @@ declare namespace Eris {
     editMessage(messageID: string, content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message<T>>;
     editOriginalMessage(content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message<T>>;
     getOriginalMessage(): Promise<Message<T>>;
+    launchActivity(): Promise<void>;
   }
 
   export class ComponentInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
@@ -3230,6 +3246,7 @@ declare namespace Eris {
     editOriginalMessage(content: string | InteractionContentEdit, file?: FileContent | FileContent[]): Promise<Message<T>>;
     editParent(content: Omit<InteractionContentEdit, "poll">, file?: FileContent | FileContent[]): Promise<void>;
     getOriginalMessage(): Promise<Message<T>>;
+    launchActivity(): Promise<void>;
   }
 
   export class UnknownInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
