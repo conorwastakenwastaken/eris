@@ -794,6 +794,7 @@ declare namespace Eris {
     explicitContentFilter: ExplicitContentFilter;
     features: GuildFeatures[];
     icon: string | null;
+    incidentsData?: GuildIncidentsData | null;
     keywords: string[] | null;
     large: boolean;
     maxEmojis: number;
@@ -1132,6 +1133,10 @@ declare namespace Eris {
     category_id: number;
     guild_id: string;
   }
+  interface EditGuildIncidentActionsOptions {
+    dmsDisabledUntil?: Date | null;
+    invitesDisabledUntil?: Date | null;
+  }
   interface GetGuildAuditLogOptions {
     actionType?: number;
     before?: string;
@@ -1176,6 +1181,12 @@ declare namespace Eris {
   interface GuildBan {
     reason?: string;
     user: User;
+  }
+  interface GuildIncidentsData {
+    dmsDisabledUntil: number | null;
+    dmSpamDetectedAt: number | null;
+    invitesDisabledUntil: number | null;
+    raidDetectedAt: number | null;
   }
   interface GuildOnboarding {
     default_channel_ids: string[];
@@ -2325,6 +2336,7 @@ declare namespace Eris {
       options: { name?: string; roles?: string[] },
       reason?: string
     ): Promise<Emoji>;
+    editGuildIncidentActions(guildID: string, options: EditGuildIncidentActionsOptions): Promise<GuildIncidentsData>;
     editGuildMember(guildID: string, memberID: string, options: MemberOptions, reason?: string): Promise<Member>;
     editGuildOnboarding(guildID: string, options: GuildOnboardingOptions, reason?: string): Promise<GuildOnboarding>;
     editGuildScheduledEvent<T extends GuildScheduledEventEntityTypes>(guildID: string, eventID: string, event: GuildScheduledEventEditOptions<T>, reason?: string): Promise<GuildScheduledEvent<T>>;
@@ -2682,6 +2694,7 @@ declare namespace Eris {
     icon: string | null;
     iconURL: string | null;
     id: string;
+    incidentsData?: GuildIncidentsData | null;
     joinedAt: number;
     large: boolean;
     maxEmojis: number;
@@ -2767,6 +2780,7 @@ declare namespace Eris {
     editCommandPermissions(permissions: ApplicationCommandPermissions[], reason?: string): Promise<GuildApplicationCommandPermissions[]>;
     editDiscovery(options?: DiscoveryOptions): Promise<DiscoveryMetadata>;
     editEmoji(emojiID: string, options: { name: string; roles?: string[] }, reason?: string): Promise<Emoji>;
+    editIncidentActions(options: EditGuildIncidentActionsOptions): Promise<GuildIncidentsData>;
     editMember(memberID: string, options: MemberOptions, reason?: string): Promise<Member>;
     /** @deprecated */
     editNickname(nick: string): Promise<void>;
