@@ -760,6 +760,17 @@ export default interface Constants {
     /** @deprecated */
     DISCONNECT:          13;
   };
+  WebhookEventPayloadTypes: {
+    PING:  0;
+    EVENT: 1;
+  };
+  WebhookEventTypes: {
+    APPLICATION_AUTHORIZED:   "APPLICATION_AUTHORIZED";
+    APPLICATION_DEAUTHORIZED: "APPLICATION_DEAUTHORIZED";
+    ENTITLEMENT_CREATE:       "ENTITLEMENT_CREATE";
+    ENTITLEMENT_UPDATE:       "ENTITLEMENT_UPDATE";
+    ENTITLEMENT_DELETE:       "ENTITLEMENT_DELETE";
+  };
   WebhookTypes: {
     INCOMING:         1;
     CHANNEL_FOLLOWER: 2;

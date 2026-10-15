@@ -202,7 +202,7 @@ declare namespace Eris {
   type VoiceChannelEffectAnimationType = Constants["VoiceChannelEffectAnimationTypes"][keyof Constants["VoiceChannelEffectAnimationTypes"]];
 
   // Webhook
-  type WebhookPayloadEdit = Pick<WebhookPayload, "attachments" | "content" | "embed" | "embeds" | "file" | "allowedMentions" | "components">;
+  type WebhookPayloadEdit = Pick<WebhookPayload, "attachments" | "content" | "embed" | "embeds" | "file" | "allowedMentions" | "components" | "flags" | "poll" | "threadID" | "withComponents">;
   type WebhookTypes = Constants["WebhookTypes"][keyof Constants["WebhookTypes"]];
 
   // INTERFACES
@@ -2040,6 +2040,15 @@ declare namespace Eris {
     url?: string;
     user?: PartialUser;
   }
+  interface WebhookApplicationAuthorizedData {
+    guild?: Partial<Guild>;
+    integration_type?: 0 | 1;
+    scopes: string[];
+    user: PartialUser;
+  }
+  interface WebhookApplicationDeauthorizedData {
+    user: PartialUser;
+  }
   interface WebhookCreateOptions extends Omit<WebhookEditOptions, "channelID"> {
     name: string;
   }
@@ -2048,8 +2057,27 @@ declare namespace Eris {
     channelID?: string;
     name?: string;
   }
+  interface WebhookEntitlementData {
+    application_id: string;
+    consumed?: boolean;
+    deleted: boolean;
+    ends_at: string | null;
+    guild_id?: string;
+    id: string;
+    sku_id: string;
+    starts_at: string | null;
+    type: number;
+    user_id?: string;
+  }
+  interface WebhookEventPayload {
+    application_id: string;
+    event?: { data?: WebhookApplicationAuthorizedData | WebhookApplicationDeauthorizedData | WebhookEntitlementData; timestamp: string; type: Constants["WebhookEventTypes"][keyof Constants["WebhookEventTypes"]] };
+    type: 0 | 1;
+    version: 1;
+  }
   interface WebhookPayload {
     allowedMentions?: AllowedMentions;
+    appliedTags?: string[];
     attachments?: PartialAttachment[];
     auth?: boolean;
     avatarURL?: string;
@@ -2062,9 +2090,11 @@ declare namespace Eris {
     flags?: number;
     poll?: PollCreateOptions;
     threadID?: string;
+    threadName?: string;
     tts?: boolean;
     username?: string;
     wait?: boolean;
+    withComponents?: boolean;
   }
 
   // TODO: Does this have more stuff?
@@ -2294,7 +2324,7 @@ declare namespace Eris {
     deleteRole(guildID: string, roleID: string, reason?: string): Promise<void>;
     deleteStageInstance(channelID: string): Promise<void>;
     deleteWebhook(webhookID: string, token?: string, reason?: string): Promise<void>;
-    deleteWebhookMessage(webhookID: string, token: string, messageID: string): Promise<void>;
+    deleteWebhookMessage(webhookID: string, token: string, messageID: string, threadID?: string): Promise<void>;
     disconnect(options: { reconnect?: boolean | "auto" }): void;
     editAFK(afk: boolean): void;
     editAutoModerationRule<T extends AutoModerationTriggerType>(guildID: string, ruleID: string, options: AutoModerationEditOptions<T>): Promise<AutoModerationRule>;
@@ -2457,7 +2487,7 @@ declare namespace Eris {
     getThreadMembers(channelID: string, options?: GetThreadMembersOptions): Promise<ThreadMember[]>;
     getVoiceRegions(guildID?: string): Promise<VoiceRegion[]>;
     getWebhook(webhookID: string, token?: string): Promise<Webhook>;
-    getWebhookMessage(webhookID: string, token: string, messageID: string): Promise<Message<AnyGuildTextableChannel>>;
+    getWebhookMessage(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<AnyGuildTextableChannel>>;
     joinThread(channelID: string, userID?: string): Promise<void>;
     joinVoiceChannel(channelID: string, options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
     kickGuildMember(guildID: string, userID: string, reason?: string): Promise<void>;
