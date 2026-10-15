@@ -865,6 +865,7 @@ declare namespace Eris {
     avatarDecorationData?: AvatarDecorationData | null;
     communicationDisabledUntil?: number | null;
     flags?: number;
+    guildCollectibles?: UserCollectibles | null;
     nick: string | null;
     pending?: boolean;
     premiumSince?: number | null;
@@ -1490,6 +1491,15 @@ declare namespace Eris {
     asset: string;
     sku_id: string;
   }
+  interface UserCollectibles {
+    nameplate?: UserCollectiblesNameplate;
+  }
+  interface UserCollectiblesNameplate {
+    asset: string;
+    label: string;
+    palette: string;
+    sku_id: string;
+  }
   interface UserPrimaryGuild {
     badge: string | null;
     identity_enabled: boolean | null;
@@ -1517,6 +1527,7 @@ declare namespace Eris {
     avatar: string | null;
     avatarDecorationData?: AvatarDecorationData | null;
     banner?: string | null;
+    collectibles?: UserCollectibles | null;
     discriminator: string;
     id: string;
     primaryGuild?: UserPrimaryGuild | null;
@@ -3143,6 +3154,7 @@ declare namespace Eris {
     bannerURL: string | null;
     bot: boolean;
     clientStatus?: ClientStatus;
+    collectibles?: UserCollectibles | null;
     communicationDisabledUntil?: number | null;
     createdAt: number;
     defaultAvatar: string;
@@ -3152,6 +3164,7 @@ declare namespace Eris {
     game: Activity | null;
     globalName: string | null;
     guild: Guild;
+    guildCollectibles?: UserCollectibles | null;
     highestRole: string;
     id: string;
     joinedAt: number | null;
@@ -3588,6 +3601,7 @@ declare namespace Eris {
     banner?: string | null;
     bannerURL: string | null;
     bot: boolean;
+    collectibles?: UserCollectibles | null;
     createdAt: number;
     defaultAvatar: string;
     defaultAvatarURL: string;
