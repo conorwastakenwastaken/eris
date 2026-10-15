@@ -143,6 +143,13 @@ export default interface Constants {
     MENTION_SPAM:   5;
     MEMBER_PROFILE: 6;
   };
+  BaseThemeTypes: {
+    UNSET:    0;
+    DARK:     1;
+    LIGHT:    2;
+    DARKER:   3;
+    MIDNIGHT: 4;
+  };
   ButtonStyles: {
     PRIMARY:   1;
     SECONDARY: 2;

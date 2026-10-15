@@ -1553,6 +1553,7 @@ declare namespace Eris {
     /** @deprecated */
     messageReferenceID?: string;
     poll?: PollCreateOptions;
+    sharedClientTheme?: SharedClientTheme;
     stickerIDs?: string[];
     tts?: boolean;
   }
@@ -1605,6 +1606,12 @@ declare namespace Eris {
   interface FileContent {
     file: Buffer | string;
     name: string;
+  }
+  interface SharedClientTheme {
+    base_mix: number;
+    base_theme?: 0 | 1 | 2 | 3 | 4 | null;
+    colors: string[];
+    gradient_angle: number;
   }
   interface TextInput {
     custom_id: string;
@@ -3216,6 +3223,7 @@ declare namespace Eris {
     referencedMessage?: Message | null;
     roleMentions: string[];
     roleSubscriptionData?: RoleSubscriptionData;
+    sharedClientTheme?: SharedClientTheme;
     stickerItems?: StickerItems[];
     /** @deprecated */
     stickers?: Sticker[];
