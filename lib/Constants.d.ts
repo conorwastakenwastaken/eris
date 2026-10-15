@@ -183,23 +183,19 @@ export default interface Constants {
     MENTIONABLE_SELECT: 7;
     CHANNEL_SELECT:     8;
   };
-  ForumLayoutTypes: {
-    NOT_SET:      0;
-    LIST_VIEW:    1;
-    GALLERY_VIEW: 2;
-  };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
     ONLY_MENTIONS: 1;
-  };
-  SortOrderTypes: {
-    LATEST_ACTIVITY: 0;
-    CREATION_DATE:   1;
   };
   ExplicitContentFilterLevels: {
     DISABLED:              0;
     MEMBERS_WITHOUT_ROLES: 1;
     ALL_MEMBERS:           2;
+  };
+  ForumLayoutTypes: {
+    NOT_SET:      0;
+    LIST_VIEW:    1;
+    GALLERY_VIEW: 2;
   };
   GatewayOPCodes: {
     DISPATCH:                  0;
@@ -437,16 +433,16 @@ export default interface Constants {
     // Unknown 1 << 8 (256)
     DM_SETTINGS_UPSELL_ACKNOWLEDGED: 512;
   };
+  MembershipState: {
+    INVITED:  1;
+    ACCEPTED: 2;
+  };
   MessageActivityTypes: {
     JOIN:         1;
     SPECTATE:     2;
     LISTEN:       3;
     WATCH:        4;
     JOIN_REQUEST: 5;
-  };
-  MembershipState: {
-    INVITED:  1;
-    ACCEPTED: 2;
   };
   MessageFlags: {
     CROSSPOSTED:                            1;
@@ -460,6 +456,10 @@ export default interface Constants {
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD: 256;
     SUPPRESS_NOTIFICATIONS:                 4096;
     IS_VOICE_MESSAGE:                       8192;
+  };
+  MessageReferenceTypes: {
+    DEFAULT: 0;
+    FORWARD: 1;
   };
   MessageTypes: {
     DEFAULT:                                      0;
@@ -504,10 +504,6 @@ export default interface Constants {
     PURCHASE_NOTIFICATION:                        44;
     // Unknown 45
     POLL_RESULT:                                  46;
-  };
-  MessageReferenceTypes: {
-    DEFAULT: 0;
-    FORWARD: 1;
   };
   MFALevels: {
     NONE:     0;
@@ -630,6 +626,10 @@ export default interface Constants {
     NITRO_CLASSIC: 1;
     NITRO:         2;
   };
+  ReactionTypes: {
+    NORMAL: 0;
+    BURST:  1;
+  };
   RoleConnectionMetadataTypes: {
     INTEGER_LESS_THAN_OR_EQUAL:     1;
     INTEGER_GREATER_THAN_OR_EQUAL:  2;
@@ -643,9 +643,9 @@ export default interface Constants {
   RoleFlags: {
     IN_PROMPT: 1;
   };
-  ReactionTypes: {
-    NORMAL: 0;
-    BURST:  1;
+  SortOrderTypes: {
+    LATEST_ACTIVITY: 0;
+    CREATION_DATE:   1;
   };
   StageInstancePrivacyLevel: {
     PUBLIC:     1;
