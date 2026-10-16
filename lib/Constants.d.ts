@@ -64,6 +64,11 @@ export default interface Constants {
     ENABLED:             2;
     DISABLED_BY_DISCORD: 3;
   };
+  ApplicationIdentityProfileDynamicFieldTypes: {
+    STRING: 1;
+    NUMBER: 2;
+    MEDIA:  3;
+  };
   ApplicationFlags: {
     APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE: 64;
     GATEWAY_PRESENCE:                              4096;
@@ -833,11 +838,12 @@ export default interface Constants {
     ACCEPTED: 2;
   };
   MessageActivityTypes: {
-    JOIN:         1;
-    SPECTATE:     2;
-    LISTEN:       3;
-    WATCH:        4;
-    JOIN_REQUEST: 5;
+    JOIN:           1;
+    SPECTATE:       2;
+    LISTEN:         3;
+    WATCH:          4;
+    JOIN_REQUEST:   5;
+    STREAM_REQUEST: 6;
   };
   MessageFlags: {
     CROSSPOSTED:                            1;
@@ -1107,6 +1113,9 @@ export default interface Constants {
     ONLY_MENTIONS:  4;
     NO_MESSAGES:    8;
   };
+  UnfurledMediaItemFlags: {
+    IS_ANIMATED: 1;
+  };
   UserFlags: {
     NONE:                         0;
     DISCORD_STAFF:                1;
@@ -1208,11 +1217,18 @@ export default interface Constants {
     EVENT: 1;
   };
   WebhookEventTypes: {
-    APPLICATION_AUTHORIZED:   "APPLICATION_AUTHORIZED";
-    APPLICATION_DEAUTHORIZED: "APPLICATION_DEAUTHORIZED";
-    ENTITLEMENT_CREATE:       "ENTITLEMENT_CREATE";
-    ENTITLEMENT_UPDATE:       "ENTITLEMENT_UPDATE";
-    ENTITLEMENT_DELETE:       "ENTITLEMENT_DELETE";
+    APPLICATION_AUTHORIZED:     "APPLICATION_AUTHORIZED";
+    APPLICATION_DEAUTHORIZED:   "APPLICATION_DEAUTHORIZED";
+    ENTITLEMENT_CREATE:         "ENTITLEMENT_CREATE";
+    ENTITLEMENT_UPDATE:         "ENTITLEMENT_UPDATE";
+    ENTITLEMENT_DELETE:         "ENTITLEMENT_DELETE";
+    QUEST_USER_ENROLLMENT:      "QUEST_USER_ENROLLMENT";
+    LOBBY_MESSAGE_CREATE:       "LOBBY_MESSAGE_CREATE";
+    LOBBY_MESSAGE_UPDATE:       "LOBBY_MESSAGE_UPDATE";
+    LOBBY_MESSAGE_DELETE:       "LOBBY_MESSAGE_DELETE";
+    GAME_DIRECT_MESSAGE_CREATE: "GAME_DIRECT_MESSAGE_CREATE";
+    GAME_DIRECT_MESSAGE_UPDATE: "GAME_DIRECT_MESSAGE_UPDATE";
+    GAME_DIRECT_MESSAGE_DELETE: "GAME_DIRECT_MESSAGE_DELETE";
   };
   WebhookTypes: {
     INCOMING:         1;
