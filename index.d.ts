@@ -180,6 +180,7 @@ declare namespace Eris {
 
   // Presence
   type ActivityFlags = Constants["ActivityFlags"][keyof Constants["ActivityFlags"]];
+  type ActivityStatusDisplayType = Constants["ActivityStatusDisplayTypes"][keyof Constants["ActivityStatusDisplayTypes"]];
   type ActivityType = Constants["ActivityTypes"][keyof Constants["ActivityTypes"]];
   type SelfStatus = Status | "invisible";
   type Status = "online" | "idle" | "dnd";
@@ -577,7 +578,7 @@ declare namespace Eris {
     allowedMentions?: AllowedMentions;
     autoreconnect?: boolean;
     capabilities?: number;
-    compress?: boolean;
+    compress?: boolean | "zlib-stream" | "zstd-stream";
     connectionTimeout?: number;
     defaultImageFormat?: string;
     defaultImageSize?: number;
@@ -2076,21 +2077,34 @@ declare namespace Eris {
   interface Activity<T extends ActivityType = ActivityType> extends ActivityPartial<T> {
     application_id?: string;
     assets?: {
+      invite_cover_image?: string;
       large_image?: string;
       large_text?: string;
+      large_url?: string;
       small_image?: string;
       small_text?: string;
+      small_url?: string;
       [key: string]: unknown;
     };
+    /** Labels of the activity's buttons (the button URLs are not sent to bots) */
+    buttons?: string[];
     created_at: number;
     details?: string;
+    details_url?: string;
     emoji?: { animated?: boolean; id?: string; name: string };
     flags?: number;
     instance?: boolean;
     party?: { id?: string; size?: [number, number] };
-    secrets?: { join?: string; match?: string; spectate?: string };
+    secrets?: {
+      join?: string;
+      /** @deprecated Not documented by Discord */
+      match?: string;
+      spectate?: string;
+    };
     state?: string;
-    timestamps?: { end?: number; start: number };
+    state_url?: string;
+    status_display_type?: ActivityStatusDisplayType | null;
+    timestamps?: { end?: number; start?: number };
     type: T;
     // the stuff attached to this object apparently varies even more than documented, so...
     [key: string]: unknown;
@@ -2658,6 +2672,7 @@ declare namespace Eris {
     voiceConnections: VoiceConnectionManager;
     constructor(token: string, options?: ClientOptions);
     addGroupRecipient(groupID: string, userID: string): Promise<void>;
+    /** @deprecated */
     addGuildDiscoverySubcategory(guildID: string, categoryID: string, reason?: string): Promise<DiscoverySubcategoryResponse>;
     addGuildMember(guildID: string, userID: string, accessToken: string, options?: AddGuildMemberOptions): Promise<void>;
     addGuildMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void>;
@@ -2716,6 +2731,7 @@ declare namespace Eris {
     deleteCommand(commandID: string): Promise<void>;
     deleteEmoji(emojiID: string): Promise<void>;
     deleteGuildCommand(guildID: string, commandID: string): Promise<void>;
+    /** @deprecated */
     deleteGuildDiscoverySubcategory(guildID: string, categoryID: string, reason?: string): Promise<void>;
     deleteGuildEmoji(guildID: string, emojiID: string, reason?: string): Promise<void>;
     deleteGuildIntegration(guildID: string, integrationID: string): Promise<void>;
@@ -2755,6 +2771,7 @@ declare namespace Eris {
     editEmoji(emojiID: string, options: EditApplicationEmojiOptions): Promise<Emoji>;
     editGuild(guildID: string, options: GuildOptions, reason?: string): Promise<Guild>;
     editGuildCommand<T extends ApplicationCommandTypes>(guildID: string, commandID: string, command: ApplicationCommandEditOptions<true, T>): Promise<ApplicationCommand<true, T>>;
+    /** @deprecated */
     editGuildDiscovery(guildID: string, options?: DiscoveryOptions): Promise<DiscoveryMetadata>;
     editGuildEmoji(
       guildID: string,
@@ -2800,6 +2817,7 @@ declare namespace Eris {
     emit<K extends keyof ClientEvents>(event: K, ...args: ClientEvents[K]): boolean;
     emit(event: string, ...args: any[]): boolean;
     endPoll(channelID: string, messageID: string): Promise<Message<AnyGuildTextableChannel>>;
+    executeGitHubWebhook(webhookID: string, token: string, options: Record<string, unknown> & { auth?: boolean; event?: string; threadID?: string; wait?: boolean }): Promise<unknown>;
     executeSlackWebhook(webhookID: string, token: string, options: Record<string, unknown> & { auth?: boolean; threadID?: string }): Promise<void>;
     executeSlackWebhook(webhookID: string, token: string, options: Record<string, unknown> & { auth?: boolean; threadID?: string; wait: true }): Promise<Message<AnyGuildTextableChannel>>;
     executeWebhook(webhookID: string, token: string, options: WebhookPayload & { wait: true }): Promise<Message<AnyGuildTextableChannel>>;
@@ -2819,9 +2837,11 @@ declare namespace Eris {
     getCommand(commandID: string): Promise<ApplicationCommand<false>>;
     getCommandPermissions(guildID: string, commandID: string): Promise<GuildApplicationCommandPermissions>;
     getCommands(): Promise<ApplicationCommand<false>[]>;
+    /** @deprecated */
     getDiscoveryCategories(): Promise<DiscoveryCategory[]>;
     getDMChannel(userID: string): Promise<DMChannel>;
     getEmoji(emojiID: string): Promise<Emoji>;
+    /** @deprecated */
     getEmojiGuild(emojiID: string): Promise<Guild>;
     getEmojis(): Promise<ApplicationEmojis>;
     getEntitlement(entitlementID: string): Promise<Entitlement>;
@@ -2835,6 +2855,7 @@ declare namespace Eris {
     getGuildCommand(guildID: string, commandID: string): Promise<ApplicationCommand<true>>;
     getGuildCommandPermissions(guildID: string): Promise<GuildApplicationCommandPermissions[]>;
     getGuildCommands(guildID: string): Promise<ApplicationCommand<true>[]>;
+    /** @deprecated */
     getGuildDiscovery(guildID: string): Promise<DiscoveryMetadata>;
     /** @deprecated */
     getGuildEmbed(guildID: string): Promise<Widget>;
@@ -2944,10 +2965,12 @@ declare namespace Eris {
     sendChannelTyping(channelID: string): Promise<void>;
     sendSoundboardSound(channelID: string, options: GuildSoundboardSoundSend): Promise<void>;
     setVoiceChannelStatus(channelID: string, status: string | null, reason?: string): Promise<void>;
+    /** @deprecated */
     syncGuildIntegration(guildID: string, integrationID: string): Promise<void>;
     syncGuildTemplate(guildID: string, code: string): Promise<GuildTemplate>;
     unbanGuildMember(guildID: string, userID: string, reason?: string): Promise<void>;
     unpinMessage(channelID: string, messageID: string): Promise<void>;
+    /** @deprecated */
     validateDiscoverySearchTerm(term: string): Promise<{ valid: boolean }>;
     on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
     on(event: string, listener: (...args: any[]) => void): this;
@@ -3196,6 +3219,7 @@ declare namespace Eris {
     widgetChannelID?: string | null;
     widgetEnabled?: boolean;
     constructor(data: BaseData, client: Client);
+    /** @deprecated */
     addDiscoverySubcategory(categoryID: string, reason?: string): Promise<DiscoverySubcategoryResponse>;
     addMember(userID: string, accessToken: string, options?: AddGuildMemberOptions): Promise<void>;
     addMemberRole(memberID: string, roleID: string, reason?: string): Promise<void>;
@@ -3219,6 +3243,7 @@ declare namespace Eris {
     createTemplate(name: string, description?: string | null): Promise<GuildTemplate>;
     deleteAutoModerationRule(ruleID: string, reason?: string): Promise<void>;
     deleteCommand(commandID: string): Promise<void>;
+    /** @deprecated */
     deleteDiscoverySubcategory(categoryID: string, reason?: string): Promise<void>;
     deleteEmoji(emojiID: string, reason?: string): Promise<void>;
     deleteIntegration(integrationID: string): Promise<void>;
@@ -3236,6 +3261,7 @@ declare namespace Eris {
     editChannelPositions(channelPositions: ChannelPosition[]): Promise<void>;
     editCommand<T extends ApplicationCommandTypes>(commandID: string, command: ApplicationCommandEditOptions<true, T>): Promise<ApplicationCommand<true, T>>;
     editCommandPermissions(permissions: ApplicationCommandPermissions[], reason?: string): Promise<GuildApplicationCommandPermissions[]>;
+    /** @deprecated */
     editDiscovery(options?: DiscoveryOptions): Promise<DiscoveryMetadata>;
     editEmoji(emojiID: string, options: { name: string; roles?: string[] }, reason?: string): Promise<Emoji>;
     editIncidentActions(options: EditGuildIncidentActionsOptions): Promise<GuildIncidentsData>;
@@ -3266,6 +3292,7 @@ declare namespace Eris {
     getCommand(commandID: string): Promise<ApplicationCommand<true>>;
     getCommandPermissions(): Promise<GuildApplicationCommandPermissions[]>;
     getCommands(): Promise<ApplicationCommand<true>[]>;
+    /** @deprecated */
     getDiscovery(): Promise<DiscoveryMetadata>;
     /** @deprecated */
     getEmbed(): Promise<Widget>;
@@ -3833,7 +3860,7 @@ declare namespace Eris {
     /** @deprecated */
     constructor(client: Client, forceQueueing?: boolean);
     globalUnblock(): void;
-    request(method: RequestMethod, url: string, auth?: boolean, body?: Record<string, unknown>, file?: FileContent, _route?: string, short?: boolean): Promise<unknown>;
+    request(method: RequestMethod, url: string, auth?: boolean, body?: Record<string, unknown>, file?: FileContent, _route?: string, short?: boolean, extraHeaders?: Record<string, string>): Promise<unknown>;
     routefy(url: string, method: RequestMethod): string;
     toString(): string;
     toJSON(props?: string[]): JSONCache;
