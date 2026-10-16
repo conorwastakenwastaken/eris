@@ -170,7 +170,7 @@ declare namespace Eris {
   type MessageContentEdit = string | AdvancedMessageContentEdit;
   type MessageReferenceTypes = Constants["MessageReferenceTypes"][keyof Constants["MessageReferenceTypes"]];
   type PollLayoutTypes = Constants["PollLayoutTypes"][keyof Constants["PollLayoutTypes"]];
-  type PossiblyUncachedMessage = Message | { channel: TextableChannel | { guild?: Uncached; id: string }; guildID?: string; id: string };
+  type PossiblyUncachedMessage = Message | { authorID?: string; channel: TextableChannel | { guild?: Uncached; id: string }; guildID?: string; id: string };
   type ReactionTypes = Constants["ReactionTypes"][keyof Constants["ReactionTypes"]];
   type SelectMenu = StringSelectMenu | ChannelSelectMenu | ResolvedSelectMenus;
   type SelectMenuNonResolvedTypes = Constants["ComponentTypes"][keyof Pick<Constants["ComponentTypes"], "STRING_SELECT">];
@@ -2265,6 +2265,7 @@ declare namespace Eris {
   interface ClientStatus {
     desktop: UserStatus;
     mobile: UserStatus;
+    vr?: UserStatus;
     web: UserStatus;
   }
   interface Presence {
@@ -3933,6 +3934,7 @@ declare namespace Eris {
     call?: MessageCall;
     channel: T;
     channelMentions: string[];
+    channelType?: ChannelTypes;
     /** @deprecated */
     cleanContent: string;
     command?: Command;
