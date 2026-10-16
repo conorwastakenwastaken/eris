@@ -66,7 +66,8 @@ declare namespace Eris {
             T extends Constants["ChannelTypes"]["GUILD_STAGE_VOICE"] ? StageChannel :
               T extends Constants["ChannelTypes"]["GUILD_FORUM"] ? ForumChannel :
                 T extends Constants["ChannelTypes"]["GUILD_MEDIA"] ? MediaChannel :
-                  never;
+                  T extends Constants["ChannelTypes"]["GUILD_DIRECTORY"] ? GuildChannel :
+                    never;
   type EditGuildChannelOptions = EditForumChannelOptions | EditMediaChannelOptions | EditGuildTextableChannelOptions;
   type EditGuildTextableChannelOptions = EditNewsChannelOptions | EditTextChannelOptions | EditThreadChannelOptions | EditVoiceChannelOptions;
   type GuildTextableWithThreads = AnyGuildTextableChannel | GuildTextableChannel | AnyThreadChannel;
@@ -468,21 +469,21 @@ declare namespace Eris {
     durationSeconds: T extends Constants["AutoModerationActionTypes"]["TIMEOUT"] ? number : never;
   }
   interface AutoModerationCreateOptions<T = AutoModerationTriggerType> {
-    actions: AutoModerationAction[];
+    actions: (AutoModerationAction | RawAutoModerationAction)[];
     eventType: AutoModerationEventType;
     name: string;
-    triggerMetadata: T extends Constants["AutoModerationTriggerTypes"]["SPAM"] ? never : AutoModerationTriggerMetadata<T>;
+    triggerMetadata: T extends Constants["AutoModerationTriggerTypes"]["SPAM"] ? never : AutoModerationTriggerMetadata<T> | RawAutoModerationTriggerMetadata;
     triggerType: T;
   }
   interface AutoModerationEditOptions<T extends AutoModerationTriggerType> {
-    actions?: AutoModerationAction[];
+    actions?: (AutoModerationAction | RawAutoModerationAction)[];
     enabled?: boolean;
     eventType?: AutoModerationEventType;
     exemptChannels?: string[];
     exemptRoles?: string[];
     name?: string;
     reason?: string;
-    triggerMetadata: T extends Constants["AutoModerationTriggerTypes"]["SPAM"] ? never : AutoModerationTriggerMetadata<T> | undefined;
+    triggerMetadata: T extends Constants["AutoModerationTriggerTypes"]["SPAM"] ? never : AutoModerationTriggerMetadata<T> | RawAutoModerationTriggerMetadata | undefined;
   }
   interface AutoModerationTriggerMetadata<T = AutoModerationTriggerType> {
     allowList: T extends Constants["AutoModerationTriggerTypes"]["KEYWORD" | "KEYWORD_PRESET" | "MEMBER_PROFILE"] ? string[] : never;
@@ -492,8 +493,32 @@ declare namespace Eris {
     presets: T extends Constants["AutoModerationTriggerTypes"]["KEYWORD_PRESET"] ? AutoModerationKeywordPresetType[] : never;
     regexPatterns: T extends Constants["AutoModerationTriggerTypes"]["KEYWORD" | "MEMBER_PROFILE"] ? string[] : never;
   }
+  /** Raw (snake_case) auto moderation action, as accepted by the Discord API */
+  interface RawAutoModerationAction {
+    metadata?: {
+      channel_id?: string;
+      custom_message?: string;
+      duration_seconds?: number;
+    };
+    type: AutoModerationActionType;
+  }
+  /** Raw (snake_case) auto moderation trigger metadata, as accepted by the Discord API */
+  interface RawAutoModerationTriggerMetadata {
+    allow_list?: string[];
+    keyword_filter?: string[];
+    mention_raid_protection_enabled?: boolean;
+    mention_total_limit?: number;
+    presets?: AutoModerationKeywordPresetType[];
+    regex_patterns?: string[];
+  }
 
   // Channel
+  interface ChannelMention {
+    guild_id: string;
+    id: string;
+    name: string;
+    type: ChannelTypes;
+  }
   interface ChannelFollow {
     channel_id: string;
     webhook_id: string;
@@ -515,14 +540,17 @@ declare namespace Eris {
     defaultReactionEmoji?: DefaultReactionEmoji;
     defaultSortOrder?: SortOrderTypes;
     defaultThreadRateLimitPerUser?: number;
+    flags?: number;
     nsfw?: boolean;
     parentID?: string;
     permissionOverwrites?: Overwrite[];
     position?: number;
     rateLimitPerUser?: number;
     reason?: string;
+    rtcRegion?: string | null;
     topic?: string;
     userLimit?: number;
+    videoQualityMode?: VideoQualityMode;
   }
   interface EditChannelOptionsBase {
     name?: string;
@@ -623,8 +651,8 @@ declare namespace Eris {
     /** @deprecated */
     getPins(options?: undefined): Promise<Message[]>;
     getPins(options: GetPinsOptions): Promise<GetPinsResponse>;
-    pinMessage(messageID: string): Promise<void>;
-    unpinMessage(messageID: string): Promise<void>;
+    pinMessage(messageID: string, reason?: string): Promise<void>;
+    unpinMessage(messageID: string, reason?: string): Promise<void>;
   }
   interface GetPinsResponse {
     hasMore: boolean;
@@ -1052,6 +1080,7 @@ declare namespace Eris {
     tts: boolean;
   }
   interface OldRole {
+    /** @deprecated Use `colors` instead */
     color: number;
     colors: RoleColors;
     flags: number;
@@ -1065,6 +1094,7 @@ declare namespace Eris {
     unicodeEmoji: string | null;
   }
   interface OldStageInstance {
+    /** @deprecated */
     discoverableDisabled: boolean;
     privacyLevel: StageInstancePrivacyLevel;
     topic: string;
@@ -1327,6 +1357,7 @@ declare namespace Eris {
   }
   interface GetGuildAuditLogOptions {
     actionType?: number;
+    after?: string;
     before?: string;
     limit?: number;
     userID?: string;
@@ -1361,6 +1392,8 @@ declare namespace Eris {
     withCounts?: boolean;
   }
   interface GuildAuditLog {
+    /** Raw application command objects referenced in the audit log */
+    applicationCommands: Record<string, unknown>[];
     autoModerationRules: AutoModerationRule[];
     entries: GuildAuditLogEntry[];
     guildScheduledEvents: GuildScheduledEvent[];
@@ -1426,6 +1459,7 @@ declare namespace Eris {
     icon?: string | null;
     name?: string;
     preferredLocale?: LocaleStrings | null;
+    premiumProgressBarEnabled?: boolean;
     publicUpdatesChannelID?: string | null;
     rulesChannelID?: string | null;
     safetyAlertsChannelID?: string | null;
@@ -2040,9 +2074,14 @@ declare namespace Eris {
   }
   interface PartialAttachment {
     description?: string;
+    /** Duration of the audio file in seconds (voice messages, sent with the IS_VOICE_MESSAGE flag) */
+    duration_secs?: number;
     filename?: string;
     id: string | number;
     is_spoiler?: boolean;
+    title?: string;
+    /** Base64 encoded bytearray representing a sampled waveform (voice messages) */
+    waveform?: string;
   }
   interface Poll {
     allow_multiselect: boolean;
@@ -2056,8 +2095,17 @@ declare namespace Eris {
     answer_id: number;
     poll_media: PollMedia;
   }
-  interface PollCreateOptions extends Omit<Poll, "expiry" | "results"> {
-    duration: number;
+  interface PollCreateAnswer {
+    answer_id?: number;
+    poll_media: PollMedia;
+  }
+  interface PollCreateOptions {
+    allow_multiselect?: boolean;
+    answers: PollCreateAnswer[];
+    /** Number of hours the poll should be open for, defaults to 24 */
+    duration?: number;
+    layout_type?: PollLayoutTypes;
+    question: Pick<PollMedia, "text">;
   }
   interface PollMedia {
     emoji?: PartialEmoji;
@@ -2848,7 +2896,7 @@ declare namespace Eris {
     createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionOptions, file: FileContent | FileContent[] | undefined, withResponse: boolean): Promise<InteractionCallbackResponse | void>;
     createMessage(channelID: string, content: MessageContent, file?: FileContent | FileContent[]): Promise<Message>;
     createRole(guildID: string, options?: Role | RoleOptions, reason?: string): Promise<Role>;
-    createStageInstance(channelID: string, options: StageInstanceOptions): Promise<StageInstance>;
+    createStageInstance(channelID: string, options: StageInstanceOptions, reason?: string): Promise<StageInstance>;
     createTestEntitlement(options: CreateTestEntitlementOptions): Promise<Entitlement>;
     createThread(channelID: string, options: CreateForumThreadOptions, file?: FileContent | FileContent[]): Promise<PublicThreadChannel<true>>;
     createThread(channelID: string, options: CreateThreadWithoutMessageOptions, file?: FileContent | FileContent[]): Promise<NewsThreadChannel | PrivateThreadChannel | PublicThreadChannel>;
@@ -2866,7 +2914,7 @@ declare namespace Eris {
     /** @deprecated */
     deleteGuildDiscoverySubcategory(guildID: string, categoryID: string, reason?: string): Promise<void>;
     deleteGuildEmoji(guildID: string, emojiID: string, reason?: string): Promise<void>;
-    deleteGuildIntegration(guildID: string, integrationID: string): Promise<void>;
+    deleteGuildIntegration(guildID: string, integrationID: string, reason?: string): Promise<void>;
     deleteGuildScheduledEvent(guildID: string, eventID: string): Promise<void>;
     deleteGuildSoundboardSound(guildID: string, soundID: string, reason?: string): Promise<void>;
     deleteGuildSticker(guildID: string, stickerID: string, reason?: string): Promise<void>;
@@ -2875,7 +2923,7 @@ declare namespace Eris {
     deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void>;
     deleteMessages(channelID: string, messageIDs: string[], reason?: string): Promise<void>;
     deleteRole(guildID: string, roleID: string, reason?: string): Promise<void>;
-    deleteStageInstance(channelID: string): Promise<void>;
+    deleteStageInstance(channelID: string, reason?: string): Promise<void>;
     deleteTestEntitlement(entitlementID: string): Promise<void>;
     deleteWebhook(webhookID: string, token?: string, reason?: string): Promise<void>;
     deleteWebhookMessage(webhookID: string, token: string, messageID: string, threadID?: string): Promise<void>;
@@ -2921,18 +2969,18 @@ declare namespace Eris {
     editGuildTemplate(guildID: string, code: string, options: GuildTemplateOptions): Promise<GuildTemplate>;
     editGuildVanity(guildID: string, code: string | null): Promise<GuildVanity>;
     editGuildVoiceState(guildID: string, options: VoiceStateOptions, userID?: string): Promise<void>;
-    editGuildWelcomeScreen(guildID: string, options: WelcomeScreenOptions): Promise<WelcomeScreen>;
-    editGuildWidget(guildID: string, options: WidgetOptions): Promise<Widget>;
+    editGuildWelcomeScreen(guildID: string, options: WelcomeScreenOptions, reason?: string): Promise<WelcomeScreen>;
+    editGuildWidget(guildID: string, options: WidgetOptions, reason?: string): Promise<Widget>;
     editInviteTargetUsers(inviteID: string, file: FileContent): Promise<void>;
     editMessage(channelID: string, messageID: string, content: MessageContentEdit): Promise<Message>;
     /** @deprecated */
     editNickname(guildID: string, nick: string, reason?: string): Promise<void>;
     editRole(guildID: string, roleID: string, options: RoleOptions, reason?: string): Promise<Role>; // TODO not all options are available?
     editRoleConnectionMetadataRecords(data: ApplicationRoleConnectionMetadata[]): Promise<ApplicationRoleConnectionMetadata[]>;
-    editRolePosition(guildID: string, roleID: string, position: number): Promise<void>;
+    editRolePosition(guildID: string, roleID: string, position: number, reason?: string): Promise<void>;
     editRolePositions(guildID: string, rolePositions: RolePosition[], reason?: string): Promise<Role[]>;
     editSelf(options: EditSelfOptions): Promise<ExtendedUser>;
-    editStageInstance(channelID: string, options: StageInstanceOptions): Promise<StageInstance>;
+    editStageInstance(channelID: string, options: StageInstanceOptions, reason?: string): Promise<StageInstance>;
     editStatus(status: SelfStatus, activities?: ActivityPartial<ActivityType>[] | ActivityPartial<ActivityType>): void;
     editStatus(activities?: ActivityPartial<ActivityType>[] | ActivityPartial<ActivityType>): void;
     editWebhook(
@@ -3076,7 +3124,7 @@ declare namespace Eris {
     off(event: string, listener: (...args: any[]) => void): this;
     once<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
     once(event: string, listener: (...args: any[]) => void): this;
-    pinMessage(channelID: string, messageID: string): Promise<void>;
+    pinMessage(channelID: string, messageID: string, reason?: string): Promise<void>;
     pruneMembers(guildID: string, options?: PruneMemberOptions): Promise<number>;
     purgeChannel(channelID: string, options: PurgeChannelOptions): Promise<number>;
     /** @deprecated */
@@ -3105,7 +3153,7 @@ declare namespace Eris {
     syncGuildIntegration(guildID: string, integrationID: string): Promise<void>;
     syncGuildTemplate(guildID: string, code: string): Promise<GuildTemplate>;
     unbanGuildMember(guildID: string, userID: string, reason?: string): Promise<void>;
-    unpinMessage(channelID: string, messageID: string): Promise<void>;
+    unpinMessage(channelID: string, messageID: string, reason?: string): Promise<void>;
     /** @deprecated */
     validateDiscoverySearchTerm(term: string): Promise<{ valid: boolean }>;
     on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
@@ -3235,12 +3283,12 @@ declare namespace Eris {
     /** @deprecated */
     getPins(): Promise<Message<this>[]>;
     getPins(options: GetPinsOptions): Promise<GetPinsResponse>;
-    pinMessage(messageID: string): Promise<void>;
+    pinMessage(messageID: string, reason?: string): Promise<void>;
     removeMessageReaction(messageID: string, reaction: string): Promise<void>;
     /** @deprecated */
     removeMessageReaction(messageID: string, reaction: string, userID?: string): Promise<void>;
     sendTyping(): Promise<void>;
-    unpinMessage(messageID: string): Promise<void>;
+    unpinMessage(messageID: string, reason?: string): Promise<void>;
     unsendMessage(messageID: string): Promise<void>;
   }
 
@@ -3262,6 +3310,8 @@ declare namespace Eris {
 
   export class ExtendedUser extends User {
     email: string;
+    flags?: number;
+    locale?: string;
     mfaEnabled: boolean;
     premiumType: PremiumTypes;
     verified: boolean;
@@ -3295,6 +3345,7 @@ declare namespace Eris {
     applicationID: string | null;
     approximateMemberCount?: number;
     approximatePresenceCount?: number;
+    /** @deprecated Discovery data is no longer documented by Discord */
     autoRemoved?: boolean;
     banner: string | null;
     bannerURL: string | null;
@@ -3304,6 +3355,7 @@ declare namespace Eris {
     description: string | null;
     discoverySplash: string | null;
     discoverySplashURL: string | null;
+    /** @deprecated Discovery data is no longer documented by Discord */
     emojiCount?: number;
     emojis: Emoji[];
     events: Collection<GuildScheduledEvent>;
@@ -3334,7 +3386,9 @@ declare namespace Eris {
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
     premiumTier: PremiumTier;
+    /** @deprecated Discovery data is no longer documented by Discord */
     primaryCategory?: DiscoveryCategory;
+    /** @deprecated Discovery data is no longer documented by Discord */
     primaryCategoryID?: number;
     publicUpdatesChannelID: string | null;
     roles: Collection<Role>;
@@ -3384,7 +3438,7 @@ declare namespace Eris {
     /** @deprecated */
     deleteDiscoverySubcategory(categoryID: string, reason?: string): Promise<void>;
     deleteEmoji(emojiID: string, reason?: string): Promise<void>;
-    deleteIntegration(integrationID: string): Promise<void>;
+    deleteIntegration(integrationID: string, reason?: string): Promise<void>;
     deleteRole(roleID: string): Promise<void>;
     deleteScheduledEvent(eventID: string): Promise<void>;
     deleteSoundboardSound(soundID: string, reason?: string): Promise<void>;
@@ -3415,8 +3469,8 @@ declare namespace Eris {
     editTemplate(code: string, options: GuildTemplateOptions): Promise<GuildTemplate>;
     editVanity(code: string | null): Promise<GuildVanity>;
     editVoiceState(options: VoiceStateOptions, userID?: string): Promise<void>;
-    editWelcomeScreen(options: WelcomeScreenOptions): Promise<WelcomeScreen>;
-    editWidget(options: WidgetOptions): Promise<Widget>;
+    editWelcomeScreen(options: WelcomeScreenOptions, reason?: string): Promise<WelcomeScreen>;
+    editWidget(options: WidgetOptions, reason?: string): Promise<Widget>;
     fetchAllMembers(timeout?: number): Promise<number>;
     fetchMembers(options?: RequestGuildMembersOptions): Promise<Member[]>;
     fetchSoundboardSounds(options?: Omit<RequestGuildSoundboardSoundsOptions, "guildIDs">): Promise<SoundboardSound[]>;
@@ -3480,6 +3534,7 @@ declare namespace Eris {
   export class GuildAuditLogEntry extends Base {
     actionType: number;
     after: Record<string, unknown> | null;
+    applicationID?: string;
     autoModerationRuleName?: string;
     autoModerationRuleTriggerType?: AutoModerationTriggerType;
     before: Record<string, unknown> | null;
@@ -3488,6 +3543,7 @@ declare namespace Eris {
     deleteMemberDays?: number;
     guild: Guild | Uncached;
     id: string;
+    integrationType?: string;
     member?: Member | Uncached;
     membersRemoved?: number;
     message?: Message<AnyGuildTextableChannel> | Uncached;
@@ -3533,7 +3589,7 @@ declare namespace Eris {
     type: GuildIntegrationTypes;
     user?: User;
     constructor(data: BaseData, guild: Guild | Uncached, client?: Client);
-    delete(): Promise<void>;
+    delete(reason?: string): Promise<void>;
   }
 
   export class GuildPreview extends Base {
@@ -3550,6 +3606,7 @@ declare namespace Eris {
     name: string;
     splash: string | null;
     splashURL: string | null;
+    stickers: Sticker[];
     constructor(data: BaseData, client: Client);
     dynamicDiscoverySplashURL(format?: ImageFormat, size?: number): string | null;
     dynamicIconURL(format?: ImageFormat, size?: number): string | null;
@@ -3794,6 +3851,7 @@ declare namespace Eris {
           ? Guild // If the invite channel is not partial
           : Guild | Uncached | undefined; // If the invite channel is partial
 
+    guildScheduledEvent?: GuildScheduledEvent;
     inviter?: User;
     maxAge: CT extends "withMetadata" ? number : null;
     maxUses: CT extends "withMetadata" ? number : null;
@@ -3892,6 +3950,7 @@ declare namespace Eris {
     interactionMetadata?: MessageInteractionMetadata;
     jumpLink: string;
     member: T extends GuildTextableWithThreads ? Member : null;
+    mentionChannels?: ChannelMention[];
     mentionEveryone: boolean;
     mentions: User[];
     messageReference: MessageReference | null;
@@ -3926,11 +3985,11 @@ declare namespace Eris {
     getReaction(reaction: string, options?: GetMessageReactionOptions): Promise<User[]>;
     /** @deprecated */
     getReaction(reaction: string, limit?: number, before?: string, after?: string): Promise<User[]>;
-    pin(): Promise<void>;
+    pin(reason?: string): Promise<void>;
     removeReaction(reaction: string, userID?: string): Promise<void>;
     removeReactionEmoji(reaction: string): Promise<void>;
     removeReactions(): Promise<void>;
-    unpin(): Promise<void>;
+    unpin(reason?: string): Promise<void>;
   }
 
   export class ModalSubmitInteraction<T extends PossiblyUncachedTextableChannel = TextableChannel> extends Interaction {
@@ -4034,6 +4093,7 @@ declare namespace Eris {
   }
 
   export class Role extends Base {
+    /** @deprecated Use `colors` instead */
     color: number;
     colors: RoleColors;
     createdAt: number;
@@ -4055,7 +4115,7 @@ declare namespace Eris {
     constructor(data: BaseData, guild: Guild);
     delete(reason?: string): Promise<void>;
     edit(options: RoleOptions, reason?: string): Promise<Role>;
-    editPosition(position: number): Promise<void>;
+    editPosition(position: number, reason?: string): Promise<void>;
   }
 
   export class SequentialBucket {
@@ -4199,15 +4259,16 @@ declare namespace Eris {
 
   export class StageChannel extends VoiceChannel {
     type: Constants["ChannelTypes"]["GUILD_STAGE_VOICE"];
-    createInstance(options: StageInstanceOptions): Promise<StageInstance>;
-    deleteInstance(): Promise<void>;
-    editInstance(options: StageInstanceOptions): Promise<StageInstance>;
+    createInstance(options: StageInstanceOptions, reason?: string): Promise<StageInstance>;
+    deleteInstance(reason?: string): Promise<void>;
+    editInstance(options: StageInstanceOptions, reason?: string): Promise<StageInstance>;
     getInstance(): Promise<StageInstance>;
   }
 
   export class StageInstance extends Base {
     channel: StageChannel | Uncached;
     client: Client;
+    /** @deprecated */
     discoverableDisabled: boolean;
     guild: Guild | Uncached;
     guildScheduledEventID?: string | null;
@@ -4215,8 +4276,8 @@ declare namespace Eris {
     topic: string;
     constructor(data: BaseData, client: Client);
     update(data: BaseData): void;
-    delete(): Promise<void>;
-    edit(options: StageInstanceOptions): Promise<StageInstance>;
+    delete(reason?: string): Promise<void>;
+    edit(options: StageInstanceOptions, reason?: string): Promise<StageInstance>;
   }
 
   export class Subscription extends Base {
@@ -4258,8 +4319,8 @@ declare namespace Eris {
     getPins(): Promise<Message<this>[]>;
     getPins(options: GetPinsOptions): Promise<GetPinsResponse>;
     getWebhooks(): Promise<Webhook[]>;
-    pinMessage(messageID: string): Promise<void>;
-    unpinMessage(messageID: string): Promise<void>;
+    pinMessage(messageID: string, reason?: string): Promise<void>;
+    unpinMessage(messageID: string, reason?: string): Promise<void>;
   }
 
   export class ThreadChannel extends GuildTextableChannel implements Pinnable {
@@ -4281,8 +4342,8 @@ declare namespace Eris {
     getPins(options: GetPinsOptions): Promise<GetPinsResponse>;
     join(userID?: string): Promise<void>;
     leave(userID?: string): Promise<void>;
-    pinMessage(messageID: string): Promise<void>;
-    unpinMessage(messageID: string): Promise<void>;
+    pinMessage(messageID: string, reason?: string): Promise<void>;
+    unpinMessage(messageID: string, reason?: string): Promise<void>;
   }
 
   export class ThreadMember extends Base {
@@ -4321,6 +4382,7 @@ declare namespace Eris {
     id: string;
     mention: string;
     primaryGuild?: UserPrimaryGuild | null;
+    primaryGuildBadgeURL: string | null;
     publicFlags?: number;
     staticAvatarURL: string;
     system: boolean;

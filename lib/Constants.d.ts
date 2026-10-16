@@ -84,6 +84,7 @@ export default interface Constants {
   AttachmentFlags: {
     IS_CLIP:      1;
     IS_THUMBNAIL: 2;
+    /** @deprecated */
     IS_REMIX:     4;
     IS_SPOILER:   8;
     IS_ANIMATED:  32;
@@ -224,10 +225,11 @@ export default interface Constants {
     PREMIUM:   6;
   };
   ChannelFlags: {
-    PINNED:                      1;
+    PINNED:                      2;
     REQUIRE_TAG:                 16;
     HIDE_MEDIA_DOWNLOAD_OPTIONS: 32768;
     CHANNEL_OBFUSCATED:          131072;
+    IS_SPOILER_CHANNEL:          2097152;
   };
   ChannelTypes: {
     GUILD_TEXT:           0;
@@ -243,7 +245,7 @@ export default interface Constants {
     GUILD_STAGE_VOICE:    13;
     /** @deprecated */
     GUILD_STAGE:          13;
-    // Unknown 14
+    GUILD_DIRECTORY:      14;
     GUILD_FORUM:          15;
     GUILD_MEDIA:          16;
   };
@@ -268,6 +270,10 @@ export default interface Constants {
     RADIO_GROUP:        21;
     CHECKBOX_GROUP:     22;
     CHECKBOX:           23;
+  };
+  ConnectionVisibilityTypes: {
+    NONE:     0;
+    EVERYONE: 1;
   };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
@@ -450,11 +456,21 @@ export default interface Constants {
     CANCELED:  4;
   };
   GuildWidgetStyles: {
-    Shield:  "shield";
-    Banner1: "banner1";
-    Banner2: "banner2";
-    Banner3: "banner3";
-    Banner4: "banner4";
+    SHIELD:   "shield";
+    BANNER_1: "banner1";
+    BANNER_2: "banner2";
+    BANNER_3: "banner3";
+    BANNER_4: "banner4";
+    /** @deprecated Use `SHIELD` */
+    Shield:   "shield";
+    /** @deprecated Use `BANNER_1` */
+    Banner1:  "banner1";
+    /** @deprecated Use `BANNER_2` */
+    Banner2:  "banner2";
+    /** @deprecated Use `BANNER_3` */
+    Banner3:  "banner3";
+    /** @deprecated Use `BANNER_4` */
+    Banner4:  "banner4";
   };
   ImageFormats: [
     "jpg",
@@ -841,6 +857,7 @@ export default interface Constants {
     JOIN:           1;
     SPECTATE:       2;
     LISTEN:         3;
+    /** @deprecated */
     WATCH:          4;
     JOIN_REQUEST:   5;
     STREAM_REQUEST: 6;
@@ -1028,6 +1045,7 @@ export default interface Constants {
     NONE:          0;
     NITRO_CLASSIC: 1;
     NITRO:         2;
+    NITRO_BASIC:   3;
   };
   ReactionTypes: {
     NORMAL: 0;
@@ -1062,6 +1080,7 @@ export default interface Constants {
     CREATION_DATE:   1;
   };
   StageInstancePrivacyLevel: {
+    /** @deprecated */
     PUBLIC:     1;
     GUILD_ONLY: 2;
   };
@@ -1119,34 +1138,50 @@ export default interface Constants {
   UserFlags: {
     NONE:                         0;
     DISCORD_STAFF:                1;
+    /** @deprecated */
     DISCORD_EMPLOYEE:             1;
     PARTNER:                      2;
+    /** @deprecated */
     PARTNERED_SERVER_OWNER:       2;
     /** @deprecated */
     DISCORD_PARTNER:              2;
     HYPESQUAD:                    4;
+    /** @deprecated */
     HYPESQUAD_EVENTS:             4;
     BUG_HUNTER_LEVEL_1:           8;
+    /** @deprecated */
     HYPESQUAD_ONLINE_HOUSE_1:     64;
     HOUSE_BRAVERY:                64;
+    /** @deprecated */
     HYPESQUAD_ONLINE_HOUSE_2:     128;
     HOUSE_BRILLIANCE:             128;
+    /** @deprecated */
     HYPESQUAD_ONLINE_HOUSE_3:     256;
     HOUSE_BALANCE:                256;
     PREMIUM_EARLY_SUPPORTER:      512;
+    /** @deprecated */
     EARLY_SUPPORTER:              512;
     TEAM_PSEUDO_USER:             1024;
+    /** @deprecated */
     TEAM_USER:                    1024;
+    /** @deprecated */
     SYSTEM:                       4096;
     BUG_HUNTER_LEVEL_2:           16384;
     VERIFIED_BOT:                 65536;
     VERIFIED_DEVELOPER:           131072;
+    /** @deprecated */
     VERIFIED_BOT_DEVELOPER:       131072;
+    /** @deprecated */
     EARLY_VERIFIED_BOT_DEVELOPER: 131072;
     CERTIFIED_MODERATOR:          262144;
+    /** @deprecated */
     DISCORD_CERTIFIED_MODERATOR:  262144;
     BOT_HTTP_INTERACTIONS:        524288;
+    /** @deprecated */
     SPAMMER:                      1048576;
+    /** @deprecated */
+    ACTIVE_BOT_DEVELOPER:         4194304;
+    /** @deprecated */
     ACTIVE_DEVELOPER:             4194304;
   };
   VerificationLevels: {
