@@ -884,23 +884,53 @@ export default interface Constants {
     PREMIUM: 0;
     BASIC:   1;
   };
+  VoiceCloseCodes: {
+    UNKNOWN_OPCODE:           4001;
+    FAILED_TO_DECODE_PAYLOAD: 4002;
+    NOT_AUTHENTICATED:        4003;
+    AUTHENTICATION_FAILED:    4004;
+    ALREADY_AUTHENTICATED:    4005;
+    SESSION_NO_LONGER_VALID:  4006;
+    SESSION_TIMEOUT:          4009;
+    SERVER_NOT_FOUND:         4011;
+    UNKNOWN_PROTOCOL:         4012;
+    DISCONNECTED:             4014;
+    VOICE_SERVER_CRASHED:     4015;
+    UNKNOWN_ENCRYPTION_MODE:  4016;
+    DAVE_PROTOCOL_REQUIRED:   4017;
+    BAD_REQUEST:              4020;
+    RATE_LIMITED:             4021;
+    CALL_TERMINATED:          4022;
+  };
   VoiceOPCodes: {
-    IDENTIFY:            0;
-    SELECT_PROTOCOL:     1;
-    READY:               2;
-    HEARTBEAT:           3;
-    SESSION_DESCRIPTION: 4;
-    SPEAKING:            5;
-    HEARTBEAT_ACK:       6;
-    RESUME:              7;
-    HELLO:               8;
-    RESUMED:             9;
+    IDENTIFY:                            0;
+    SELECT_PROTOCOL:                     1;
+    READY:                               2;
+    HEARTBEAT:                           3;
+    SESSION_DESCRIPTION:                 4;
+    SPEAKING:                            5;
+    HEARTBEAT_ACK:                       6;
+    RESUME:                              7;
+    HELLO:                               8;
+    RESUMED:                             9;
     // Unknown 10
-    CLIENTS_CONNECT:     11;
+    CLIENTS_CONNECT:                     11;
     // Unknown 12
-    CLIENT_DISCONNECT:   13;
+    CLIENT_DISCONNECT:                   13;
     /** @deprecated */
-    DISCONNECT:          13;
+    DISCONNECT:                          13;
+    // DAVE (end-to-end encryption) protocol opcodes. Eris does not implement DAVE; these are listed for completeness
+    DAVE_PREPARE_TRANSITION:             21;
+    DAVE_EXECUTE_TRANSITION:             22;
+    DAVE_TRANSITION_READY:               23;
+    DAVE_PREPARE_EPOCH:                  24;
+    DAVE_MLS_EXTERNAL_SENDER:            25;
+    DAVE_MLS_KEY_PACKAGE:                26;
+    DAVE_MLS_PROPOSALS:                  27;
+    DAVE_MLS_COMMIT_WELCOME:             28;
+    DAVE_MLS_ANNOUNCE_COMMIT_TRANSITION: 29;
+    DAVE_MLS_WELCOME:                    30;
+    DAVE_MLS_INVALID_COMMIT_WELCOME:     31;
   };
   WebhookEventPayloadTypes: {
     PING:  0;

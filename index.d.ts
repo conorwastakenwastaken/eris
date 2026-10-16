@@ -4161,6 +4161,10 @@ declare namespace Eris {
     setStatus(status: string | null, reason?: string): Promise<void>;
   }
 
+  /**
+   * A voice connection. Eris does not implement Discord's DAVE (end-to-end encryption) protocol, which Discord requires
+   * for DMs, group DMs and regular voice channels (the voice gateway closes with 4017). Only stage channels can be joined.
+   */
   export class VoiceConnection extends EventEmitter implements SimpleJSON {
     bitrate: number;
     channelID: string | null;
@@ -4168,6 +4172,8 @@ declare namespace Eris {
     connecting: boolean;
     connectionTimeout: NodeJS.Timeout | null;
     current?: VoiceStreamCurrent | null;
+    /** Always 0, Eris does not support the DAVE protocol */
+    daveProtocolVersion: number;
     ended?: boolean;
     endpoint: URL;
     frameDuration: number;
@@ -4175,7 +4181,7 @@ declare namespace Eris {
     heartbeatInterval: NodeJS.Timeout | null;
     id: string;
     mode?: string;
-    modes?: string;
+    modes?: string[];
     /** Optional dependencies OpusScript (opusscript) or OpusEncoder (@discordjs/opus) */
     opus: Record<string, unknown>;
     opusOnly: boolean;
@@ -4186,10 +4192,12 @@ declare namespace Eris {
     ready: boolean;
     receiveStreamOpus?: VoiceDataStream | null;
     receiveStreamPCM?: VoiceDataStream | null;
+    reconnectAttempts: number;
     reconnecting: boolean;
     resuming: boolean;
     samplingRate: number;
     secret: Buffer;
+    /** @deprecated No longer used, packets are built by the transport cipher */
     sendBuffer: Buffer;
     sendNonce: Buffer;
     sequence: number;
@@ -4204,6 +4212,7 @@ declare namespace Eris {
     udpSocket: DgramSocket | null;
     volume: number;
     ws: BrowserWebSocket | WebSocket | null;
+    wsSequence: number;
     constructor(id: string, options?: { opusOnly?: boolean; shard?: Shard; shared?: boolean });
     connect(data: VoiceConnectData): NodeJS.Timer | void;
     disconnect(error?: Error, reconnecting?: boolean): void;
