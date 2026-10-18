@@ -4095,7 +4095,7 @@ declare namespace Eris {
     guildMember?: Member;
     joinTimestamp: number;
     threadID: string;
-    constructor(data: BaseData, client: Client);
+    constructor(data: BaseData, client: Client, guildID?: string);
     update(data: BaseData): void;
     leave(): Promise<void>;
   }
