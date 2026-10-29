@@ -1693,6 +1693,9 @@ declare namespace Eris {
     spoiler?: boolean;
     type: Constants["ComponentTypes"]["CONTAINER"];
   }
+  interface ContentScanMetadata {
+    flags: number;
+  }
   interface FileComponent {
     file: UnfurledMediaItem;
     id?: number;
@@ -2061,8 +2064,12 @@ declare namespace Eris {
   }
   interface UnfurledMediaItem {
     attachment_id?: string;
+    content_scan_metadata?: ContentScanMetadata;
     content_type?: string;
+    flags?: number;
     height?: number | null;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url?: string;
     url: string;
     width?: number | null;
