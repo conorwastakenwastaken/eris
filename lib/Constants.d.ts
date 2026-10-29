@@ -72,11 +72,14 @@ export default interface Constants {
     APPLICATION_COMMAND_BADGE:                     8388608;
   };
   AttachmentFlags: {
-    IS_CLIP:      1;
-    IS_THUMBNAIL: 2;
-    IS_REMIX:     4;
-    IS_SPOILER:   8;
-    IS_ANIMATED:  32;
+    IS_CLIP:                    1;
+    IS_THUMBNAIL:               2;
+    IS_REMIX:                   4;
+    IS_SPOILER:                 8;
+    CONTAINS_EXPLICIT_CONTENT:  16;
+    IS_ANIMATED:                32;
+    CONTAINS_GORE_CONTENT:      64;
+    CONTAINS_SELF_HARM_CONTENT: 128;
   };
   AuditLogActions: {
     GUILD_UPDATE: 1;
@@ -261,12 +264,20 @@ export default interface Constants {
     CHECKBOX_GROUP:     22;
     CHECKBOX:           23;
   };
+  ContentScanMetadataFlags: {
+    IS_EXPLICIT_CONTENT:  1;
+    IS_GORE_CONTENT:      2;
+    IS_SELF_HARM_CONTENT: 4;
+  };
   DefaultMessageNotificationLevels: {
     ALL_MESSAGES:  0;
     ONLY_MENTIONS: 1;
   };
   EmbedFlags: {
+    CONTAINS_EXPLICIT_CONTENT:  16;
     IS_CONTENT_INVENTORY_ENTRY: 32;
+    CONTAINS_GORE_CONTENT:      64;
+    CONTAINS_SELF_HARM_CONTENT: 128;
   };
   EmbedImageFlags: {
     IS_ANIMATED: 32;
@@ -837,6 +848,9 @@ export default interface Constants {
     ALL_MESSAGES:   2;
     ONLY_MENTIONS:  4;
     NO_MESSAGES:    8;
+  };
+  UnfurledMediaItemFlags: {
+    IS_ANIMATED: 1;
   };
   UserFlags: {
     NONE:                         0;
