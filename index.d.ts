@@ -3651,7 +3651,7 @@ declare namespace Eris {
     collectibles?: UserCollectibles | null;
     communicationDisabledUntil?: number | null;
     createdAt: number;
-    defaultAvatar: string;
+    defaultAvatar: number;
     defaultAvatarURL: string;
     discriminator: string;
     flags: number;
@@ -4134,7 +4134,7 @@ declare namespace Eris {
     bot: boolean;
     collectibles?: UserCollectibles | null;
     createdAt: number;
-    defaultAvatar: string;
+    defaultAvatar: number;
     defaultAvatarURL: string;
     discriminator: string;
     globalName: string | null;
