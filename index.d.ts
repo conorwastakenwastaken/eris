@@ -2822,6 +2822,8 @@ declare namespace Eris {
     getBotGateway(): Promise<{ session_start_limit: { max_concurrency: number; remaining: number; reset_after: number; total: number }; shards: number; url: string }>;
     getChannel(channelID: string): Exclude<AnyChannel, GroupChannel>;
     getChannelInvites(channelID: string): Promise<Invite[]>;
+    getChannelMemberPermissions(channelID: string, memberID: string, implicit?: boolean): Promise<Permission>;
+    getChannelRolePermissions(channelID: string, roleID: string, implicit?: boolean): Promise<Permission>;
     getChannelWebhooks(channelID: string): Promise<Webhook[]>;
     getCommand(commandID: string): Promise<ApplicationCommand<false>>;
     getCommandPermissions(guildID: string, commandID: string): Promise<GuildApplicationCommandPermissions>;
@@ -2847,9 +2849,11 @@ declare namespace Eris {
     getGuildEmbed(guildID: string): Promise<Widget>;
     getGuildIntegrations(guildID: string): Promise<GuildIntegration[]>;
     getGuildInvites(guildID: string): Promise<Invite[]>;
+    getGuildMemberPermissions(guildID: string, memberID: string): Promise<Permission>;
     getGuildOnboarding(guildID: string): Promise<GuildOnboarding>;
     getGuildPreview(guildID: string): Promise<GuildPreview>;
     getGuildRoleMemberCounts(guildID: string): Promise<Record<string, number>>;
+    getGuildRolePermissions(guildID: string, roleID: string): Promise<Permission>;
     getGuildScheduledEvents(guildID: string, options?: GetGuildScheduledEventOptions): Promise<GuildScheduledEvent[]>;
     getGuildScheduledEventUsers(guildID: string, eventID: string, options?: GetGuildScheduledEventUsersOptions): Promise<GuildScheduledEventUser[]>;
     getGuildSoundboardSound(guildID: string, soundID: string): Promise<SoundboardSound>;
@@ -3278,6 +3282,7 @@ declare namespace Eris {
     getEmbed(): Promise<Widget>;
     getIntegrations(): Promise<GuildIntegration[]>;
     getInvites(): Promise<Invite[]>;
+    getMemberPermissions(memberID: string): Promise<Permission>;
     getOnboarding(): Promise<GuildOnboarding>;
     getPruneCount(options?: GetPruneOptions): Promise<number>;
     getRESTChannels(): Promise<AnyGuildChannel[]>;
@@ -3293,6 +3298,7 @@ declare namespace Eris {
     getRESTSticker(stickerID: string): Promise<Sticker>;
     getRESTStickers(): Promise<Sticker[]>;
     getRoleMemberCounts(): Promise<Record<string, number>>;
+    getRolePermissions(roleID: string): Promise<Permission>;
     getScheduledEvents(options?: GetGuildScheduledEventOptions): Promise<GuildScheduledEvent[]>;
     getScheduledEventUsers(eventID: string, options?: GetGuildScheduledEventUsersOptions): Promise<GuildScheduledEventUser[]>;
     getSoundboardSound(soundID: string): Promise<SoundboardSound>;
@@ -3352,6 +3358,8 @@ declare namespace Eris {
     type: GuildChannelTypes;
     delete(reason?: string): Promise<AnyGuildChannel>;
     edit(options: EditGuildChannelOptions, reason?: string): Promise<this>;
+    getMemberPermissions(memberID: string, implicit?: boolean): Promise<Permission>;
+    getRolePermissions(roleID: string, implicit?: boolean): Promise<Permission>;
     permissionsOf(memberID: string | Member | MemberRoles): Permission;
   }
 
