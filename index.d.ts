@@ -4168,8 +4168,8 @@ declare namespace Eris {
     editPermission(overwriteID: string, allow: PermissionValueTypes, deny: PermissionValueTypes, type: PermissionType, reason?: string): Promise<PermissionOverwrite>;
     getInvites(): Promise<Invite<"withMetadata", this>[]>;
     getWebhooks(): Promise<Webhook[]>;
-    join(guildID: string, options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
-    leave(guildID: string): void;
+    join(options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
+    leave(): void;
     sendSoundboardSound(options: GuildSoundboardSoundSend): Promise<void>;
     setStatus(status: string | null, reason?: string): Promise<void>;
   }
