@@ -2638,7 +2638,6 @@ declare namespace Eris {
   export class Client extends EventEmitter {
     application?: { flags: number; id: string };
     bot: boolean;
-    channelGuildMap: Record<string, string>;
     dmChannelMap: Record<string, string>;
     dmChannels: Collection<DMChannel>;
     gatewayURL?: string;
@@ -2657,7 +2656,6 @@ declare namespace Eris {
     requestHandler: RequestHandler;
     shards: ShardManager;
     startTime: number;
-    threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<UnavailableGuild>;
     uptime: number;
     user: ExtendedUser;
@@ -2755,7 +2753,7 @@ declare namespace Eris {
       type: PermissionType,
       reason?: string
     ): Promise<void>;
-    editChannelPosition(channelID: string, position: number, options?: EditChannelPositionOptions): Promise<void>;
+    editChannelPosition(guildID: string | undefined, channelID: string, position: number, options?: EditChannelPositionOptions): Promise<void>;
     editChannelPositions(guildID: string, channelPositions: ChannelPosition[]): Promise<void>;
     editCommand<T extends ApplicationCommandTypes>(commandID: string, command: ApplicationCommandEditOptions<false, T>): Promise<ApplicationCommand<false, T>>;
     editCommandPermissions(guildID: string, commandID: string, permissions: ApplicationCommandPermissions[], reason?: string): Promise<GuildApplicationCommandPermissions>;
@@ -2820,7 +2818,7 @@ declare namespace Eris {
     getAutoModerationRule(guildID: string, ruleID: string): Promise<AutoModerationRule>;
     getAutoModerationRules(guildID: string): Promise<AutoModerationRule[]>;
     getBotGateway(): Promise<{ session_start_limit: { max_concurrency: number; remaining: number; reset_after: number; total: number }; shards: number; url: string }>;
-    getChannel(channelID: string): Exclude<AnyChannel, GroupChannel>;
+    getChannel(channelID: string, guildID: string | undefined): Exclude<AnyChannel, GroupChannel>;
     getChannelInvites(channelID: string): Promise<Invite[]>;
     getChannelMemberPermissions(channelID: string, memberID: string, implicit?: boolean): Promise<Permission>;
     getChannelRolePermissions(channelID: string, roleID: string, implicit?: boolean): Promise<Permission>;
@@ -2921,11 +2919,11 @@ declare namespace Eris {
     getWebhook(webhookID: string, token?: string): Promise<Webhook>;
     getWebhookMessage(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<AnyGuildTextableChannel>>;
     joinThread(channelID: string, userID?: string): Promise<void>;
-    joinVoiceChannel(channelID: string, options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
+    joinVoiceChannel(guildID: string, channelID: string, options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
     kickGuildMember(guildID: string, userID: string, reason?: string): Promise<void>;
     leaveGuild(guildID: string): Promise<void>;
     leaveThread(channelID: string, userID?: string): Promise<void>;
-    leaveVoiceChannel(channelID: string): void;
+    leaveVoiceChannel(guildID: string, channelID: string): void;
     off<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
     off(event: string, listener: (...args: any[]) => void): this;
     once<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
@@ -4170,8 +4168,8 @@ declare namespace Eris {
     editPermission(overwriteID: string, allow: PermissionValueTypes, deny: PermissionValueTypes, type: PermissionType, reason?: string): Promise<PermissionOverwrite>;
     getInvites(): Promise<Invite<"withMetadata", this>[]>;
     getWebhooks(): Promise<Webhook[]>;
-    join(options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
-    leave(): void;
+    join(guildID: string, options?: JoinVoiceChannelOptions): Promise<VoiceConnection>;
+    leave(guildID: string): void;
     sendSoundboardSound(options: GuildSoundboardSoundSend): Promise<void>;
     setStatus(status: string | null, reason?: string): Promise<void>;
   }
